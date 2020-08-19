@@ -4,10 +4,10 @@ import java.util.function.Supplier;
 
 public class Trial {
 
+    static final int CLASS_CONSTANT = 50;
     private final String account;
     private int mark1;
     private int mark2;
-    static final int CLASS_CONSTANT = 50;
 
     public Trial(String account, int mark1, int mark2) {
         this.account = account;
@@ -54,7 +54,7 @@ public class Trial {
     }
 
     public Trial copy() {
-        return new Trial(this.account, this.mark1, this.mark2);
+        return new Trial(this);
     }
 
     public boolean isPassed() {

@@ -1,8 +1,9 @@
 package trials;
 
 public class ExtraTrial extends Trial {
-    private int mark3;
+
     static final int CLASS_CONSTANT_FOR_EXTRA_TRIAL = 40;
+    private int mark3;
 
     public ExtraTrial(String account, int mark1, int mark2, int mark3) {
         super(account, mark1, mark2);
@@ -35,7 +36,7 @@ public class ExtraTrial extends Trial {
 
     @Override
     public Trial copy() {
-        return new ExtraTrial(super.getAccount(), super.getMark1(), super.getMark2(), mark3);
+        return new ExtraTrial(this);
     }
 
     @Override

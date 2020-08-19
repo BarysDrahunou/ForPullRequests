@@ -16,10 +16,12 @@ public class Runner {
     private static List<Trial> trials;
 
     public static void main(String[] args) {
+        FileReader fileReader = null;
         try {
+            fileReader = new FileReader(args[0]);
             Type type = new TypeToken<List<JsonObject>>() {
             }.getType();
-            List<JsonObject> jsonObjects = new Gson().fromJson(new FileReader(args[0]), type);
+            List<JsonObject> jsonObjects = new Gson().fromJson(fileReader, type);
             trials = getAllTrialsFromJson(jsonObjects);        //1
             trials.forEach(LOGGER::info);        //2
             printTheNumberOfPassedTrials();       //3
@@ -30,6 +32,15 @@ public class Runner {
         } catch (IOException e) {
             LOGGER.error(e);
             e.printStackTrace();
+        } finally {
+            if (fileReader != null) {
+                try {
+                    fileReader.close();
+                } catch (IOException e) {
+                    LOGGER.error(e);
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

@@ -5,7 +5,6 @@ import trials.Trial;
 import com.google.gson.*;
 import org.apache.logging.log4j.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
@@ -23,10 +22,8 @@ public class FactoryOfTrials {
             Class<?> clazz = Class.forName("trials." + className);
             Trial trial = GSON.fromJson(args, (Type) clazz);
             checkExtraData(jsonObject, className);
-            return checkArgumentsOfTrial(trial, clazz);
-        } catch (ClassNotFoundException | NumberFormatException
-                | NoSuchMethodException | IllegalAccessException | InstantiationException
-                | InvocationTargetException e) {
+            return checkArgumentsOfTrial(trial);
+        } catch (ClassNotFoundException | NumberFormatException e) {
             LOGGER.error(e);
             return Optional.empty();
         }
@@ -48,10 +45,9 @@ public class FactoryOfTrials {
         }
     }
 
-    private static Optional<Trial> checkArgumentsOfTrial(Trial trial, Class<?> clazz) throws NoSuchMethodException
-            , IllegalAccessException, InvocationTargetException, InstantiationException {
+    private static Optional<Trial> checkArgumentsOfTrial(Trial trial) {
         if (isAllMarksValid(trial) && isAccountValid(trial)) {
-            return Optional.of((Trial) clazz.getConstructor(clazz).newInstance(trial));
+            return Optional.of(trial.copy());
         } else {
             return Optional.empty();
         }
