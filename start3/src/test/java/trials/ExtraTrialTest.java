@@ -8,11 +8,13 @@ import static org.junit.Assert.*;
 public class ExtraTrialTest {
     ExtraTrial trial1;
     ExtraTrial trial2;
+    ExtraTrial trial3;
 
     @Before
     public void init() {
         trial1 = new ExtraTrial("Vasya", 12, 13, 10);
         trial2 = new ExtraTrial("Dima", 60, 41, 88);
+        trial3=new ExtraTrial();
     }
 
     @Test
@@ -21,16 +23,20 @@ public class ExtraTrialTest {
         assertEquals(trial1.toString(), new ExtraTrial("Vasya", 12, 13, 10).toString());
         assertEquals(trial2.toString(), new ExtraTrial(trial).toString());
     }
+    @Test
+    public void setAccountTest() {
+        trial3.setAccount("Vasya");
+        assertEquals("Vasya",trial3.getAccount());
+    }
 
+    @Test
+    public void setMark3Test() {
+        trial3.setMark3(15);
+        assertEquals(15,trial3.getMark3());
+    }
     @Test
     public void getMark3Test() {
         assertEquals(88, trial2.getMark3());
-    }
-
-
-    @Test
-    public void getClassConstantForExtraTrial() {
-        assertEquals(40, ExtraTrial.getClassConstantForExtraTrial());
     }
 
     @Test

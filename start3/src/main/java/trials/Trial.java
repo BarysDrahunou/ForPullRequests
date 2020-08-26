@@ -1,13 +1,14 @@
 package trials;
 
-import java.util.function.Supplier;
-
 public class Trial {
 
-    static final int CLASS_CONSTANT = 50;
-    private final String account;
+    public static final int CLASS_CONSTANT = 50;
+    private String account;
     private int mark1;
     private int mark2;
+
+    public Trial() {
+    }
 
     public Trial(String account, int mark1, int mark2) {
         this.account = account;
@@ -17,10 +18,6 @@ public class Trial {
 
     public Trial(Trial trial) {
         this(trial.getAccount(), trial.getMark1(), trial.getMark2());
-    }
-
-    public static int getClassConstant() {
-        return CLASS_CONSTANT;
     }
 
     public String getAccount() {
@@ -35,7 +32,17 @@ public class Trial {
         return mark2;
     }
 
-    public Supplier<Integer> twoMarksSum = () -> this.getMark1() + this.getMark2();
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public void setMark1(int mark1) {
+        this.mark1 = mark1;
+    }
+
+    public void setMark2(int mark2) {
+        this.mark2 = mark2;
+    }
 
     @Override
     public String toString() {
@@ -58,6 +65,6 @@ public class Trial {
     }
 
     public boolean isPassed() {
-        return Integer.sum(getMark1(), getMark2()) >= getClassConstant();
+        return mark1 + mark2 >= CLASS_CONSTANT;
     }
 }

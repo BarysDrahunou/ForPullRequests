@@ -1,70 +1,43 @@
 package factory;
 
-import trials.ExtraTrial;
-import trials.Trial;
+import trials.*;
 import com.google.gson.*;
 import org.apache.logging.log4j.*;
 
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.lang.reflect.*;
+import java.util.*;
 
 public class FactoryOfTrials {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Gson GSON = new Gson();
+    private static final TrialDeserializer TRIAL_DESERIALIZER = new TrialDeserializer();
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Trial.class, TRIAL_DESERIALIZER)
+            .registerTypeAdapter(LightTrial.class, TRIAL_DESERIALIZER)
+            .registerTypeAdapter(StrongTrial.class, TRIAL_DESERIALIZER)
+            .registerTypeAdapter(ExtraTrial.class, TRIAL_DESERIALIZER)
+            .create();
 
     public static Optional<Trial> getTrial(JsonObject jsonObject) {
         try {
-            JsonObject args = jsonObject.get("args").getAsJsonObject();
             String className = jsonObject.get("class").getAsString();
-            Class<?> clazz = Class.forName("trials." + className);
-            Trial trial = GSON.fromJson(args, (Type) clazz);
-            checkExtraData(jsonObject, className);
-            return checkArgumentsOfTrial(trial);
-        } catch (ClassNotFoundException | NumberFormatException e) {
+            JsonObject args = jsonObject.get("args").getAsJsonObject();
+            Type classType = Class.forName("trials." + className);
+            checkExtraData(jsonObject);
+            return GSON.fromJson(args, classType);
+
+        } catch (ClassNotFoundException | IllegalArgumentException
+                | NullPointerException | UnsupportedOperationException e) {
             LOGGER.error(e);
             return Optional.empty();
         }
     }
 
-    private static void checkExtraData(JsonObject jsonObject, String className) {
+    private static void checkExtraData(JsonObject jsonObject) {
         jsonObject.remove("class");
-        JsonObject args = jsonObject.get("args").getAsJsonObject();
-        String[] propertiesToRemove = new String[]{"account", "mark1", "mark2"};
-        Arrays.stream(propertiesToRemove).forEach(args::remove);
-        if (className.equals("ExtraTrial")) {
-            args.remove("mark3");
-        }
-        if (args.toString().length() == 2) {
-            jsonObject.remove("args");
-        }
-        if (jsonObject.toString().length() > 2) {
+        jsonObject.remove("args");
+        if (jsonObject.size() > 0) {
             LOGGER.warn(String.format("Redundant data - %s", jsonObject));
         }
     }
 
-    private static Optional<Trial> checkArgumentsOfTrial(Trial trial) {
-        if (isAllMarksValid(trial) && isAccountValid(trial)) {
-            return Optional.of(trial.copy());
-        } else {
-            return Optional.empty();
-        }
-    }
-    private static boolean isAllMarksValid(Trial trial) {
-        boolean firstMarkValid=isMarkValid(trial.getMark1());
-        boolean secondMarkValid=isMarkValid(trial.getMark2());
-        boolean thirdMarkValid= !(trial instanceof ExtraTrial) || isMarkValid(((ExtraTrial) trial).getMark3());
-        return firstMarkValid&&secondMarkValid&&thirdMarkValid;
-    }
-
-    private static boolean isMarkValid(int mark) {
-        return mark >= 0 && mark <= 100;
-    }
-
-    private static boolean isAccountValid(Trial trial) {
-        String account = trial.getAccount();
-        return Objects.nonNull(account) && !account.isEmpty();
-    }
 }

@@ -8,11 +8,13 @@ import static org.junit.Assert.*;
 public class LightTrialTest {
     LightTrial trial1;
     LightTrial trial2;
+    LightTrial trial3;
 
     @Before
     public void init() {
         trial1 = new LightTrial("Vasya", 12, 13);
         trial2 = new LightTrial("Dima", 60, 41);
+        trial3=new LightTrial();
     }
 
     @Test
@@ -20,18 +22,6 @@ public class LightTrialTest {
         LightTrial trial = new LightTrial(trial2);
         assertEquals(trial1.toString(), new LightTrial("Vasya", 12, 13).toString());
         assertEquals(trial2.toString(), new LightTrial(trial).toString());
-    }
-
-    @Test
-    public void getClassConstantForTest1() {
-
-        assertEquals(10, LightTrial.getClassConstantForTest1());
-    }
-
-    @Test
-    public void getClassConstantForTest2() {
-
-        assertEquals(20, LightTrial.getClassConstantForTest2());
     }
 
     @Test

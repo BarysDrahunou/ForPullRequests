@@ -5,6 +5,9 @@ public class ExtraTrial extends Trial {
     static final int CLASS_CONSTANT_FOR_EXTRA_TRIAL = 40;
     private int mark3;
 
+    public ExtraTrial() {
+    }
+
     public ExtraTrial(String account, int mark1, int mark2, int mark3) {
         super(account, mark1, mark2);
         this.mark3 = mark3;
@@ -18,8 +21,8 @@ public class ExtraTrial extends Trial {
         return mark3;
     }
 
-    public static int getClassConstantForExtraTrial() {
-        return CLASS_CONSTANT_FOR_EXTRA_TRIAL;
+    public void setMark3(int mark3) {
+        this.mark3 = mark3;
     }
 
     @Override
@@ -41,6 +44,6 @@ public class ExtraTrial extends Trial {
 
     @Override
     public boolean isPassed() {
-        return super.isPassed() && getMark3() >= getClassConstantForExtraTrial();
+        return super.isPassed() && getMark3() >= CLASS_CONSTANT_FOR_EXTRA_TRIAL;
     }
 }

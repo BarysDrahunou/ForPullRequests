@@ -2,6 +2,8 @@ package trials;
 
 public class StrongTrial extends Trial {
 
+    public StrongTrial(){}
+
     public StrongTrial(String account, int mark1, int mark2) {
         super(account, mark1, mark2);
     }
@@ -17,6 +19,6 @@ public class StrongTrial extends Trial {
 
     @Override
     public boolean isPassed() {
-        return Integer.sum(getMark1() / 2, getMark2()) >= getClassConstant();
+        return getMark1() / 2 + getMark2() >= CLASS_CONSTANT;
     }
 }
