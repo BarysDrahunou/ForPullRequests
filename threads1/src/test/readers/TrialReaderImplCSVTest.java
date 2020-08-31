@@ -1,0 +1,58 @@
+package readers;
+
+import utilityfactories.TrialReaderFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import trials.*;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
+
+public class TrialReaderImplCSVTest {
+    @Mock
+    Scanner scanner;
+    TrialDao trialReaderImplCSV;
+
+    @Before
+    public void init() throws SQLException, IOException, ClassNotFoundException {
+        trialReaderImplCSV = TrialReaderFactory.getTrialDAO("testconfig.properties"
+                , "csvtestreader");
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void hasTrialTest() {
+        assertTrue(trialReaderImplCSV.hasTrial());
+    }
+
+    @Test
+    public void nextTrialTestAndFalseHasTrial() {
+        assertEquals(trialReaderImplCSV.nextTrial().orElse(null)
+                , new Trial("Vitali", 10, 22));
+        assertEquals(trialReaderImplCSV.nextTrial().orElse(null)
+                , new ExtraTrial("Dimon", 10, 11, 44));
+        assertTrue(trialReaderImplCSV.nextTrial().isEmpty());
+        assertTrue(trialReaderImplCSV.nextTrial().isEmpty());
+        assertTrue(trialReaderImplCSV.nextTrial().isEmpty());
+        assertTrue(trialReaderImplCSV.nextTrial().isEmpty());
+        assertFalse(trialReaderImplCSV.hasTrial());
+
+    }
+
+    @Test
+    public void closeTest() throws Exception {
+        Field field = trialReaderImplCSV.getClass().getDeclaredField("scanner");
+        field.setAccessible(true);
+        field.set(trialReaderImplCSV, scanner);
+        trialReaderImplCSV.close();
+        verify(scanner).close();
+    }
+
+}
