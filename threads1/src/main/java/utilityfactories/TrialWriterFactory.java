@@ -4,30 +4,26 @@ import myexceptions.WrongArgumentException;
 import org.apache.commons.io.FilenameUtils;
 import writers.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Objects;
-import java.util.Properties;
+
 
 public class TrialWriterFactory implements AbstractFactory {
-    private static Properties properties;
+    private static final String NAME_OF_LOGIN_PROPERTY_INTO_CONFIG_FILE="username";
+    private static final String NAME_OF_PASSWORD_PROPERTY_INTO_CONFIG_FILE="password";
+    private static String configFileName;
 
-    public static TrialConsumer getConsumer(String configurationFileName, String writerNameInProperties) throws IOException, SQLException, ClassNotFoundException, WrongArgumentException {
-        properties = AbstractFactory.getProperties(configurationFileName);
-        String writer = AbstractFactory.getProperty(properties, writerNameInProperties);
-        if (writer == null) {
-            throw new WrongArgumentException("Property with this name doesn't exist"
-                    , writerNameInProperties);
-        }
+    public static TrialConsumer getConsumer(String configurationFileName, String writerNameInProperties)
+            throws IOException, SQLException, ClassNotFoundException{
+        configFileName=configurationFileName;
+        String writer = AbstractFactory.getIfPropertyExists(configurationFileName
+                ,writerNameInProperties);
         try {
             String typeOfWriter = FilenameUtils.getExtension(writer).toUpperCase();
-            return TrialWriterFactory.WriterImplementationKind.valueOf(typeOfWriter)
+            return WriterImplementationKind.valueOf(typeOfWriter)
                     .getTrialConsumer(writer);
-        } catch (WrongArgumentException e) {
-            throw e;
         } catch (IllegalArgumentException e) {
-            throw new WrongArgumentException("Incorrect extension format", writer);
+            throw new WrongArgumentException("Incorrect extension format", writer,e);
         }
     }
 
@@ -38,9 +34,9 @@ public class TrialWriterFactory implements AbstractFactory {
                 return new TrialWriterImplCSV(line);
             }
         },
-        JSONL {
+        JSON {
             @Override
-            TrialConsumer getTrialConsumer(String line) {
+            TrialConsumer getTrialConsumer(String line) throws IOException {
                 return new TrialWriterImplJson(line);
             }
         },
@@ -53,23 +49,15 @@ public class TrialWriterFactory implements AbstractFactory {
                 }
                 String nameOfDataBase = dataBaseAndTableNames[0];
                 String nameOfTable = dataBaseAndTableNames[1];
-                String login = AbstractFactory.getProperty(properties, "username");
-                String password = AbstractFactory.getProperty(properties, "password");
-                checkForPresence(login, password);
+                String login = AbstractFactory.getIfPropertyExists(configFileName
+                        ,NAME_OF_LOGIN_PROPERTY_INTO_CONFIG_FILE);
+                String password = AbstractFactory.getIfPropertyExists(configFileName
+                        ,NAME_OF_PASSWORD_PROPERTY_INTO_CONFIG_FILE);
                 return new TrialWriterImplSQL(nameOfDataBase, nameOfTable, login, password);
             }
         };
 
-        private static void checkForPresence(String login, String password) {
-            if (Objects.isNull(login)) {
-                throw new WrongArgumentException("Can't find a property", "username");
-            }
-            if (Objects.isNull(password)) {
-                throw new WrongArgumentException("Can't find a property", "password");
-            }
-        }
-
         abstract TrialConsumer getTrialConsumer(String line) throws SQLException
-                , ClassNotFoundException, FileNotFoundException;
+                , ClassNotFoundException, IOException;
     }
 }

@@ -1,13 +1,21 @@
 package writers;
 
-import trials.*;
-import trialsfactory.writerserializers.*;
+import myexceptions.WrongArgumentException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import trials.Trial;
+import trialsfactory.writerserializers.ExtraTrialCSVSerializer;
+import trialsfactory.writerserializers.TrialCSVSerializer;
 
-public class TrialWriterImplCSV extends FileWriterImpl {
+import java.io.FileWriter;
+import java.io.IOException;
 
-    public TrialWriterImplCSV(String writer) {
-        super(writer);
-    }
+import static writers.TrialWriter.OUTPUT_PATH;
+
+public class TrialWriterImplCSV implements TrialConsumer {
+
+    private static final Logger LOGGER = LogManager.getLogger();
+    protected FileWriter output;
 
     private enum CSVSerializerKind {
 
@@ -28,9 +36,32 @@ public class TrialWriterImplCSV extends FileWriterImpl {
 
     }
 
+    public TrialWriterImplCSV(String writer) {
+        TrialConsumer.isWriterAlreadyExists(writer, OUTPUT_PATH);
+        try {
+            this.output = new FileWriter(OUTPUT_PATH + writer, true);
+        } catch (IOException e) {
+            throw new WrongArgumentException("There is a problem with creation of a FileWriter", writer,e);
+        }
+    }
+
+
     @Override
-    protected String serializeTrial(Trial trial) {
-        String trialKind = getTrialKind(trial);
+    public void writeTrial(Trial trial) {
+        try {
+            output.write(serializeTrial(trial) + System.lineSeparator());
+        } catch (IOException e) {
+            LOGGER.error(e);
+        }
+    }
+
+    private String serializeTrial(Trial trial) {
+        String trialKind = TrialConsumer.getTrialKind(trial);
         return CSVSerializerKind.valueOf(trialKind).serialize(trial);
+    }
+
+    @Override
+    public void close() throws Exception {
+        output.close();
     }
 }

@@ -1,6 +1,6 @@
 package readers;
 
-import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import trialsfactory.FactoryOfTrials;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,25 +14,24 @@ import java.util.Optional;
 public class TrialReaderImplJson implements TrialDao {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private FileReader fileReader;
-    private final JsonStreamParser parser;
+    private final JsonReader reader;
 
-    public TrialReaderImplJson(String reader) throws FileNotFoundException {
-        parser = getParser(reader);
+    public TrialReaderImplJson(String reader) throws IOException {
+        this.reader = getJsonReader(reader);
+        this.reader.beginArray();
     }
 
-    private JsonStreamParser getParser(String reader) throws FileNotFoundException {
+    private JsonReader getJsonReader(String reader) throws FileNotFoundException {
         URL url = this.getClass().getClassLoader().getResource(reader);
         File file = new File(Objects.requireNonNull(url).getPath());
-        fileReader = new FileReader(file);
-        return new JsonStreamParser(fileReader);
+        return new JsonReader(new FileReader(file));
     }
 
     @Override
     public boolean hasTrial() {
         try {
-            return parser.hasNext();
-        } catch (JsonSyntaxException | JsonIOException e) {
+            return reader.hasNext();
+        } catch (IOException e) {
             return false;
         }
     }
@@ -40,17 +39,45 @@ public class TrialReaderImplJson implements TrialDao {
     @Override
     public Optional<Trial> nextTrial() {
         try {
-            JsonObject trial = new GsonBuilder().create().fromJson(parser.next(), JsonObject.class);
-            String className = trial.get("class").getAsString();
-            JsonObject args = trial.get("args").getAsJsonObject();
-            String account = args.get("account").getAsString();
-            int mark1 = args.get("mark1").getAsInt();
-            int mark2 = args.get("mark2").getAsInt();
-            JsonElement lastMark=args.get("mark3");
-            int mark3 = Objects.nonNull(lastMark)?lastMark.getAsInt():0;
+            String className="";
+            String account="";
+            int mark1=-1;
+            int mark2=-1;
+            int mark3=-1;
+            reader.beginObject();
+            while (reader.hasNext()) {
+                switch (reader.nextName()) {
+                    case "class" -> {
+                        try {
+                            className = reader.nextString();
+                        } catch (IllegalStateException e) {
+                            reader.skipValue();
+                        }
+                    }
+                    case "args" -> {
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            try{
+                                switch (reader.nextName()) {
+                                    case "account" -> account = reader.nextString();
+                                    case "mark1" -> mark1 = reader.nextInt();
+                                    case "mark2" -> mark2 = reader.nextInt();
+                                    case "mark3" -> mark3 = reader.nextInt();
+                                    default -> reader.skipValue();
+                                }
+                            }
+                            catch (IllegalStateException e){
+                                reader.skipValue();
+                            }
+                        }
+                        reader.endObject();
+                    }
+                    default -> reader.skipValue();
+                }
+            }
+            reader.endObject();
             return FactoryOfTrials.getTrial(className, account, mark1, mark2, mark3);
-        } catch (NullPointerException | IllegalArgumentException | JsonSyntaxException
-                | JsonIOException | UnsupportedOperationException e) {
+        } catch (IOException e) {
             LOGGER.error(e);
             return Optional.empty();
         }
@@ -58,7 +85,8 @@ public class TrialReaderImplJson implements TrialDao {
 
     @Override
     public void close() throws IOException {
-        fileReader.close();
+        reader.endArray();
+        reader.close();
     }
 
 }

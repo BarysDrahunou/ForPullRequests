@@ -15,7 +15,7 @@ public class Runner {
         String readerNameInProperties = "reader";
         String writerNameInProperties = "writer";
         try (TrialDao trialDao = TrialReaderFactory.getTrialDAO(configFileName, readerNameInProperties);
-             TrialConsumer trialConsumer = TrialWriterFactory.getConsumer(args[0], writerNameInProperties)) {
+             TrialConsumer trialConsumer = TrialWriterFactory.getConsumer(configFileName, writerNameInProperties)) {
             TrialBuffer trialBuffer = new TrialBuffer();
             TrialReader reader = new TrialReader(trialBuffer, trialDao);
             TrialWriter writer = new TrialWriter(trialBuffer, trialConsumer);

@@ -1,16 +1,14 @@
 package trialsfactory.writerserializers;
 
-import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import trials.*;
 
-public class ExtraTrialJSONSerializer extends TrialJSONSerializer {
+import java.io.IOException;
 
+public class ExtraTrialJSONSerializer extends TrialJSONSerializer {
     @Override
-    protected JsonObject getJsonObject(Trial trial) {
-        ExtraTrial extraTrial= (ExtraTrial) trial;
-        JsonObject jsonObject= super.getJsonObject(trial);
-        JsonObject subObject=jsonObject.getAsJsonObject("args");
-        subObject.addProperty("mark3",extraTrial.getMark3());
-        return jsonObject;
+    protected void writeArgs(Trial trial, JsonWriter writer) throws IOException {
+        super.writeArgs(trial, writer);
+        writer.name("mark3").value(((ExtraTrial)trial).getMark3());
     }
 }

@@ -16,13 +16,14 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 public class TrialReaderImplCSVTest {
+    String configFileName = "src/main/resources/testconfig.properties";
     @Mock
     Scanner scanner;
     TrialDao trialReaderImplCSV;
 
     @Before
     public void init() throws SQLException, IOException, ClassNotFoundException {
-        trialReaderImplCSV = TrialReaderFactory.getTrialDAO("testconfig.properties"
+        trialReaderImplCSV = TrialReaderFactory.getTrialDAO(configFileName
                 , "csvtestreader");
         MockitoAnnotations.initMocks(this);
     }

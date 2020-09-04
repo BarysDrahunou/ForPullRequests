@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public class TrialReaderImplSql implements TrialDao {
 
+    private static final String SQL_FOR_TRIALS =
+            "SELECT CLASS, ACCOUNT, MARK1, MARK2, MARK3 FROM %s.%s LIMIT 1 OFFSET ?";
     private static final Logger LOGGER = LogManager.getLogger();
     private Connection connection;
     private final PreparedStatement preparedStatement;
@@ -19,7 +21,7 @@ public class TrialReaderImplSql implements TrialDao {
 
     public TrialReaderImplSql(String nameOfDataBase, String nameOfTable, String login, String password)
             throws ClassNotFoundException, SQLException {
-        preparedStatement = getPreparedStatement(nameOfDataBase,nameOfTable,login,password);
+        preparedStatement = getPreparedStatement(nameOfDataBase, nameOfTable, login, password);
     }
 
     private PreparedStatement getPreparedStatement(String nameOfDataBase, String nameOfTable
@@ -31,7 +33,7 @@ public class TrialReaderImplSql implements TrialDao {
         if (!Connect.isTableExist(connection, nameOfDataBase, nameOfTable)) {
             throw new WrongArgumentException("This table doesn't exist", nameOfTable);
         }
-        String sql = String.format("SELECT CLASS, ACCOUNT, MARK1, MARK2, MARK3 FROM %s.%s LIMIT 1 OFFSET ?", nameOfDataBase, nameOfTable);
+        String sql = String.format(SQL_FOR_TRIALS, nameOfDataBase, nameOfTable);
         return connection.prepareStatement(sql);
     }
 

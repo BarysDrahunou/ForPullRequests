@@ -1,34 +1,56 @@
 package writers;
 
-import utilityfactories.TrialWriterFactory;
+import myexceptions.WrongArgumentException;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
-import trials.*;
+import org.junit.runners.MethodSorters;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import trials.Trial;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.lang.reflect.Field;
 
-import static org.junit.Assert.*;
-
+import static org.mockito.Mockito.*;
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TrialWriterImplCSVTest {
-    FileWriterImpl fileWriterImpl;
+    @Mock
+    FileWriter output;
+    @Mock
+    Trial trial;
+    TrialConsumer trialConsumer;
+
     @Before
-    public void init() throws SQLException, IOException, ClassNotFoundException {
-        fileWriterImpl = (FileWriterImpl) TrialWriterFactory
-                .getConsumer("testconfig.properties"
-                        , "csvwriter");
+    public void init() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void serializeTrial() {
-        Trial lightTrial = new LightTrial("trial", 10, 10);
-        Trial trial = new Trial("trial", 10, 10);
-        Trial strongTrial = new StrongTrial("trial", 10, 10);
-        Trial extraTrial = new ExtraTrial("trial", 10, 10,11);
-        assertEquals(fileWriterImpl.serializeTrial(trial), "Trial;trial;10;10");
-        assertEquals(fileWriterImpl.serializeTrial(lightTrial), "LightTrial;trial;10;10");
-        assertEquals(fileWriterImpl.serializeTrial(strongTrial), "StrongTrial;trial;10;10");
-        assertEquals(fileWriterImpl.serializeTrial(extraTrial), "ExtraTrial;trial;10;10;11");
-        assertNotEquals(fileWriterImpl.serializeTrial(trial), "Trial;trials;10;10");
+    public void writeTrialTest() throws IOException, NoSuchFieldException, IllegalAccessException {
+        trialConsumer = new TrialWriterImplCSV("writer.csv");
+        Field field = TrialWriterImplCSV.class.getDeclaredField("output");
+        field.setAccessible(true);
+        field.set(trialConsumer, output);
+        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+        trialConsumer.writeTrial(trial);
+        verify(output, times(1)).write(argumentCaptor.capture());
+    }
+
+    @Test(expected = WrongArgumentException.class)
+    public void writeTrialTestAlreadyExist(){
+        trialConsumer = new TrialWriterImplCSV("writer.csv");
+    }
+
+    @Test
+    public void closeTest() throws Exception {
+        trialConsumer = new TrialWriterImplCSV("newWriter.csv");
+        Field field = TrialWriterImplCSV.class.getDeclaredField("output");
+        field.setAccessible(true);
+        field.set(trialConsumer, output);
+        trialConsumer.close();
+        verify(output).close();
     }
 }

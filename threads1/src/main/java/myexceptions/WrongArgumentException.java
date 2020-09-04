@@ -2,16 +2,16 @@ package myexceptions;
 
 public class WrongArgumentException extends IllegalArgumentException {
 
-    private final IllegalArgumentException exception;
     private final String problemValue;
 
-    public WrongArgumentException(String message, String problemValue) {
-        this.exception = new IllegalArgumentException(message);
+    public WrongArgumentException(String problemValue, String message) {
+        super(message);
         this.problemValue = problemValue;
     }
 
-    public IllegalArgumentException getException() {
-        return exception;
+    public WrongArgumentException(String problemValue, String message, Throwable cause) {
+        super(message, cause);
+        this.problemValue = problemValue;
     }
 
     public String getProblemValue() {
@@ -19,7 +19,8 @@ public class WrongArgumentException extends IllegalArgumentException {
     }
 
     @Override
-    public String toString() {
-        return String.format("%s - %s", problemValue, exception.getMessage());
+    public String getMessage() {
+        return String.format("%s - %s", problemValue, super.getMessage());
     }
+
 }

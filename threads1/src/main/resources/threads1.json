@@ -1,11 +1,11 @@
-{
+[{
   "class": "Trial",
   "args": {
     "account": "Vitali",
     "mark1": 10,
     "mark2": 22
   }
-}
+},
 {
   "class": "ExtraTrial",
   "args": {
@@ -15,7 +15,7 @@
     "mark3": 44,
     "mark4": 44
   }
-}
+},
 {
   "class": "ExtraTrial",
   "args": {
@@ -30,7 +30,7 @@
     "mark2": 60,
     "mark3": 20
   }
-}
+},
 {
   "class": "SomeOtherClass",
   "args": {
@@ -39,7 +39,7 @@
     "mark2": 11,
     "mark3": 20
   }
-}
+},
 {
   "class": "ExtraTrial",
   "args": {
@@ -51,3 +51,4 @@
   }
 }
 
+]

@@ -5,12 +5,11 @@ import trials.*;
 public class ExtraTrialValidator extends TrialValidator {
 
     private ExtraTrial extraTrial;
+    private int mark3;
 
     public ExtraTrialValidator(Trial trial) {
         super(trial);
     }
-
-    private int mark3;
 
     @Override
     public ExtraTrial getValidTrial(String account

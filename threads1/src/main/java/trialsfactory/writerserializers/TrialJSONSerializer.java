@@ -1,23 +1,31 @@
 package trialsfactory.writerserializers;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import trials.Trial;
 
-public class TrialJSONSerializer {
+import java.io.IOException;
 
-    public String serialize(Trial trial) {
-        return new Gson().toJson(getJsonObject(trial));
+
+public class TrialJSONSerializer  {
+
+    public void serialize(Trial trial, JsonWriter writer) throws IOException {
+        writer.beginObject();
+        writeEntireTrial(trial, writer);
+        writer.endObject();
     }
 
-    protected JsonObject getJsonObject(Trial trial) {
-        JsonObject mainJsonObject = new JsonObject();
-        JsonObject subObject = new JsonObject();
-        mainJsonObject.addProperty("class", trial.getClass().getSimpleName());
-        subObject.addProperty("account", trial.getAccount());
-        subObject.addProperty("mark1", trial.getMark1());
-        subObject.addProperty("mark2", trial.getMark2());
-        mainJsonObject.add("args", subObject);
-        return mainJsonObject;
+    private void writeEntireTrial(Trial trial, JsonWriter writer) throws IOException {
+        writer.name("class").value(trial.getClass().getSimpleName());
+        writer.name("args");
+        writer.beginObject();
+        writeArgs(trial, writer);
+        writer.endObject();
     }
+
+    protected void writeArgs(Trial trial, JsonWriter writer) throws IOException {
+        writer.name("account").value(trial.getAccount());
+        writer.name("mark1").value(trial.getMark1());
+        writer.name("mark2").value(trial.getMark2());
+    }
+
 }

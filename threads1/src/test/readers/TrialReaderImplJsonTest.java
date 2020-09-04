@@ -1,5 +1,6 @@
 package readers;
 
+import com.google.gson.stream.JsonReader;
 import utilityfactories.TrialReaderFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import trials.*;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
@@ -16,17 +16,15 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 public class TrialReaderImplJsonTest {
+    String configFileName = "src/main/resources/testconfig.properties";
     TrialDao trialReaderImplJson;
     @Mock
-    FileReader fileReader;
+    JsonReader reader;
     @Before
-    public void init() throws SQLException, IOException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        trialReaderImplJson = TrialReaderFactory.getTrialDAO("testconfig.properties"
+    public void init() throws SQLException, IOException, ClassNotFoundException{
+        trialReaderImplJson = TrialReaderFactory.getTrialDAO(configFileName
                 , "jsonreader");
         MockitoAnnotations.initMocks(this);
-        Field field = trialReaderImplJson.getClass().getDeclaredField("fileReader");
-        field.setAccessible(true);
-        field.set(trialReaderImplJson, fileReader);
     }
     @Test
     public void hasTrial() {
@@ -49,7 +47,11 @@ public class TrialReaderImplJsonTest {
     }
     @Test
     public void closeTest() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        Field field = trialReaderImplJson.getClass().getDeclaredField("reader");
+        field.setAccessible(true);
+        field.set(trialReaderImplJson, reader);
         trialReaderImplJson.close();
-        verify(fileReader).close();
+        verify(reader).close();
     }
 }

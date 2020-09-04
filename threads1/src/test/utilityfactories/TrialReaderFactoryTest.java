@@ -8,54 +8,55 @@ import readers.TrialReaderImplCSV;
 import readers.TrialReaderImplJson;
 import readers.TrialReaderImplSql;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
 public class TrialReaderFactoryTest {
+
+    String configFileName = "src/main/resources/testconfig.properties";
     TrialDao csvImpl;
     TrialDao jsonImpl;
     TrialDao sqlImpl;
 
     @Before
-    public void init() throws FileNotFoundException, SQLException, ClassNotFoundException {
+    public void init() throws IOException, SQLException, ClassNotFoundException {
         csvImpl = new TrialReaderImplCSV("threads1.csv");
-        jsonImpl = new TrialReaderImplJson("threads1.jsonl");
+        jsonImpl = new TrialReaderImplJson("threads1.json");
         sqlImpl = new TrialReaderImplSql("trials1", "trials1"
                 , "root", "root");
     }
 
     @Test
     public void getTrialDAOTest() throws SQLException, IOException, ClassNotFoundException {
-        assertEquals(csvImpl.getClass(), TrialReaderFactory.getTrialDAO("testconfig.properties"
+        assertEquals(csvImpl.getClass(), TrialReaderFactory.getTrialDAO(configFileName
                 , "csvreader").getClass());
-        assertEquals(jsonImpl.getClass(), TrialReaderFactory.getTrialDAO("testconfig.properties"
+        assertEquals(jsonImpl.getClass(), TrialReaderFactory.getTrialDAO(configFileName
                 , "jsonreader").getClass());
-        assertEquals(sqlImpl.getClass(), TrialReaderFactory.getTrialDAO("testconfig.properties"
+        assertEquals(sqlImpl.getClass(), TrialReaderFactory.getTrialDAO(configFileName
                 , "sqlreader").getClass());
     }
 
     @Test(expected = WrongArgumentException.class)
     public void getTrialDAOWrongArgumentExceptionTest() throws SQLException, IOException, ClassNotFoundException {
         try {
-            TrialReaderFactory.getTrialDAO("testconfig.properties"
+            TrialReaderFactory.getTrialDAO(configFileName
                     , "csvreaders");
         } catch (WrongArgumentException e) {
             try {
-                TrialReaderFactory.getTrialDAO("testconfig.properties"
+                TrialReaderFactory.getTrialDAO(configFileName
                         , "faultyreader1");
             } catch (WrongArgumentException e1) {
                 try {
-                    TrialReaderFactory.getTrialDAO("testconfig.properties"
+                    TrialReaderFactory.getTrialDAO(configFileName
                             , "faultyreader2");
                 } catch (WrongArgumentException e2) {
                     try {
-                        TrialReaderFactory.getTrialDAO("testconfig.properties"
+                        TrialReaderFactory.getTrialDAO(configFileName
                                 , "faultyreader3");
                     } catch (WrongArgumentException e3) {
-                        TrialReaderFactory.getTrialDAO("testconfig.properties"
+                        TrialReaderFactory.getTrialDAO(configFileName
                                 , "noexistreader");
                     }
                 }

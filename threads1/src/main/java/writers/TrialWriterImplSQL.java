@@ -8,10 +8,20 @@ import org.apache.logging.log4j.Logger;
 import trials.*;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class TrialWriterImplSQL implements TrialConsumer {
+
+    private static final String SQL_FOR_DATABASE_CREATION="CREATE DATABASE %s";
+    private static final String SQL_FOR_TABLE_CREATION="CREATE TABLE %s.%s ("
+            + "ID int(15)  NOT NULL AUTO_INCREMENT ,"
+            + "CLASS VARCHAR(45) NOT NULL,"
+            + "ACCOUNT VARCHAR(45) NOT NULL,"
+            + "MARK1 int(45) NOT NULL,"
+            + "MARK2 int(45) NOT NULL,"
+            + "MARK3 int(45) NOT NULL,"
+            + "PRIMARY KEY (ID))";
+    private static final String SQL_FOR_INSERTION="INSERT INTO %s.%s " +
+            "(CLASS, ACCOUNT, MARK1, MARK2, MARK3) VALUES (?,?,?,?,?)";
 
     private static final Logger LOGGER = LogManager.getLogger();
     private Connection connection;
@@ -48,19 +58,12 @@ public class TrialWriterImplSQL implements TrialConsumer {
         boolean isTableExist = Connect.isTableExist(connection, nameOfDataBase, nameOfTable);
         if (!isTableExist) {
             if (!isDataBaseExist) {
-                String sqlForDataBase = String.format("CREATE DATABASE %s", nameOfDataBase);
+                String sqlForDataBase = String.format(SQL_FOR_DATABASE_CREATION, nameOfDataBase);
                 createDataBaseStructure(connection, sqlForDataBase);
             }
-            String sqlForTable = String.format("CREATE TABLE %s.%s ("
-                    + "ID int(15)  NOT NULL AUTO_INCREMENT ,"
-                    + "CLASS VARCHAR(45) NOT NULL,"
-                    + "ACCOUNT VARCHAR(45) NOT NULL,"
-                    + "MARK1 int(45) NOT NULL,"
-                    + "MARK2 int(45) NOT NULL,"
-                    + "MARK3 int(45) NOT NULL,"
-                    + "PRIMARY KEY (ID))", nameOfDataBase, nameOfTable);
+            String sqlForTable = String.format(SQL_FOR_TABLE_CREATION, nameOfDataBase, nameOfTable);
             createDataBaseStructure(connection, sqlForTable);
-            String sql = String.format("INSERT INTO %s.%s (CLASS, ACCOUNT, MARK1, MARK2, MARK3) VALUES (?,?,?,?,?)"
+            String sql = String.format(SQL_FOR_INSERTION
                     , nameOfDataBase, nameOfTable);
             return connection.prepareStatement(sql);
         } else {
@@ -76,12 +79,7 @@ public class TrialWriterImplSQL implements TrialConsumer {
 
     @Override
     public void writeTrial(Trial trial) {
-        String trialKind = Arrays.stream(trial
-                .getClass()
-                .getSimpleName()
-                .split("(?<=[a-z])(?=[A-Z])"))
-                .map(String::toUpperCase)
-                .collect(Collectors.joining("_"));
+        String trialKind = TrialConsumer.getTrialKind(trial);
         try {
             preparedStatement = SQLSerializerKind.valueOf(trialKind).setPreparedStatementAndGet(trial, preparedStatement);
             preparedStatement.executeUpdate();

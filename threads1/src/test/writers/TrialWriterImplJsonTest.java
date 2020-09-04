@@ -1,31 +1,42 @@
 package writers;
 
+import com.google.gson.stream.JsonWriter;
 import utilityfactories.TrialWriterFactory;
-import org.junit.Before;
 import org.junit.Test;
-import trials.ExtraTrial;
 import trials.Trial;
 
+import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.lang.reflect.Field;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class TrialWriterImplJsonTest {
-    FileWriterImpl trialWriterImplJson;
-    @Before
-    public void init() throws SQLException, IOException, ClassNotFoundException {
-        trialWriterImplJson =(FileWriterImpl) TrialWriterFactory
-                .getConsumer("testconfig.properties"
-                        , "jsonwriter");
-    }
+
+    String OUTPUT_PATH = "src/main/outputfolder/";
+    JsonWriter writer;
+    TrialConsumer trialConsumer;
+
     @Test
-    public void serializeTrial() {
-        Trial trial = new Trial("trial", 10, 10);
-        String jsonString="{\"class\":\"Trial\",\"args\":{\"account\":\"trial\",\"mark1\":10,\"mark2\":10}}";
-        assertEquals(trialWriterImplJson.serializeTrial(trial), jsonString);
-        Trial extraTrial = new ExtraTrial("trial", 10, 10,10);
-        String jsonString1="{\"class\":\"ExtraTrial\",\"args\":{\"account\":\"trial\",\"mark1\":10,\"mark2\":10,\"mark3\":10}}";
-        assertEquals(trialWriterImplJson.serializeTrial(extraTrial), jsonString1);
+    public void writeTrialTest() throws IOException, NoSuchFieldException, IllegalAccessException {
+        Trial trial = new Trial("Vitalya", 11, 22);
+        this.writer = new JsonWriter(new FileWriter(OUTPUT_PATH + "writerTestJson.json"));
+        trialConsumer = new TrialWriterImplJson("jsonTest.json");
+        Field field = TrialWriterImplJson.class.getDeclaredField("writer");
+        field.setAccessible(true);
+        field.set(trialConsumer, writer);
+        trialConsumer.writeTrial(trial);
+    }
+
+
+    @Test
+    public void closeTest() throws Exception {
+        writer= mock(JsonWriter.class);
+        trialConsumer = new TrialWriterImplJson("newWriter.json");
+        Field field = TrialWriterImplJson.class.getDeclaredField("writer");
+        field.setAccessible(true);
+        field.set(trialConsumer, writer);
+        trialConsumer.close();
+        verify(writer,times(1)).close();
     }
 }

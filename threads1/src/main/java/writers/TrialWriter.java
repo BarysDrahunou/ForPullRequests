@@ -4,7 +4,7 @@ import buffer.TrialBuffer;
 import trials.Trial;
 
 public class TrialWriter {
-
+    protected static final String OUTPUT_PATH = "src/main/outputfolder/";
     private final TrialBuffer trialBuffer;
     private final TrialConsumer consumer;
 

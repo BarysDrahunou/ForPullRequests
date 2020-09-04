@@ -1,20 +1,30 @@
 package utilityfactories;
 
+import myexceptions.WrongArgumentException;
+
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 public interface AbstractFactory {
 
-    static String getProperty(Properties properties, String nameOfProperty) {
-        return properties.getProperty(nameOfProperty);
+     static Properties getProperties(String configurationFileName) {
+        try (FileReader fileReader = new FileReader(configurationFileName)) {
+            Properties properties = new Properties();
+            properties.load(fileReader);
+            return properties;
+        } catch (IOException e) {
+            throw new WrongArgumentException("Can not find this path to properties"
+                    , configurationFileName, e);
+        }
     }
 
-    static Properties getProperties(String configurationFileName) throws IOException {
-        Properties properties = new Properties();
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream stream = loader.getResourceAsStream(configurationFileName);
-        properties.load(stream);
-        return properties;
+    static String getIfPropertyExists(String configurationFileName, String propertyName) {
+        Properties properties = getProperties(configurationFileName);
+        String property = properties.getProperty(propertyName);
+        if (property == null) {
+            throw new WrongArgumentException("Property with this name doesn't exist", propertyName);
+        }
+        return property;
     }
 }

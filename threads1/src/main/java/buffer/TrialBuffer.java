@@ -1,10 +1,12 @@
 package buffer;
 
-import myexceptions.WrongArgumentException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import trials.Trial;
 
 public class TrialBuffer {
 
+    private static final Logger LOGGER = LogManager.getLogger();
     private Trial trial;
     private volatile boolean emptyBufferFlag = true;
 
@@ -19,24 +21,25 @@ public class TrialBuffer {
                 notifyAll();
             }
         } catch (InterruptedException e) {
-            throw new WrongArgumentException("Thread has been interrupted"
-                    , Thread.currentThread().getName());
+            LOGGER.error(e);
+            Thread.currentThread().interrupt();
         }
     }
 
     public synchronized Trial takeTrial() {
-        try {
-            synchronized (this) {
-                while (emptyBufferFlag) {
+
+        synchronized (this) {
+            while (emptyBufferFlag) {
+                try {
                     wait();
+                } catch (InterruptedException e) {
+                    LOGGER.error(e);
+                    Thread.currentThread().interrupt();
                 }
-                emptyBufferFlag = true;
-                notifyAll();
-                return trial;
             }
-        } catch (InterruptedException e) {
-            throw new WrongArgumentException("Thread has been interrupted"
-                    , Thread.currentThread().getName());
+            emptyBufferFlag = true;
+            notifyAll();
+            return trial;
         }
     }
 }

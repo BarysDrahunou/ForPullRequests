@@ -17,13 +17,14 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 public class TrialReaderImplSqlTest {
+    String configFileName = "src/main/resources/testconfig.properties";
     TrialDao trialReaderImplSQL;
     @Mock
     Connection connection;
 
     @Before
     public void init() throws SQLException, IOException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        trialReaderImplSQL = TrialReaderFactory.getTrialDAO("testconfig.properties"
+        trialReaderImplSQL = TrialReaderFactory.getTrialDAO(configFileName
                 , "sqlreader");
         MockitoAnnotations.initMocks(this);
         Field field = trialReaderImplSQL.getClass().getDeclaredField("connection");
@@ -33,13 +34,13 @@ public class TrialReaderImplSqlTest {
 
     @Test(expected = WrongArgumentException.class)
     public void dataBaseDoesNotExist() throws SQLException, IOException, ClassNotFoundException {
-        TrialReaderFactory.getTrialDAO("testconfig.properties"
+        TrialReaderFactory.getTrialDAO(configFileName
                 , "databasedoesnotexist");
     }
 
     @Test(expected = WrongArgumentException.class)
     public void tableDoesNotExist() throws SQLException, IOException, ClassNotFoundException {
-        TrialReaderFactory.getTrialDAO("testconfig.properties"
+        TrialReaderFactory.getTrialDAO(configFileName
                 , "tabledoesnotexist");
     }
 
