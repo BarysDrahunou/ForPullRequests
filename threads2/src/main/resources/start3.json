@@ -1,0 +1,86 @@
+[  {
+    "class": "Trial",
+    "args": {
+      "account": "Evgeniy",
+      "mark1": 81,
+      "mark2": 35
+    }
+  },
+  {
+    "class": "Trial",
+    "args": {
+      "account": "Denis",
+      "mark1": 245,
+      "mark2": 33,
+      "extra": "extra"
+    }
+  },
+  {
+    "class": "Trial",
+    "args": {
+      "account": "Denis",
+      "mark2": 53,
+      "extra": "extra"
+    }
+  },
+  {
+    "class": "ExtraTrial",
+    "args": {
+      "account": "Igor",
+      "mark1": 55,
+      "mark2": 78,
+      "mark3": 33,
+      "mark4": 26
+    }
+  },
+  {
+    "class": "ExtraTrial",
+    "args": {
+      "account": "Anton",
+      "mark1": 90,
+      "mark2": 20,
+      "mark3": 80
+    }
+  },
+  {
+    "class": "ExtraTrial",
+    "args": {
+      "account": "Maksim",
+      "mark1": 76,
+      "mark2": 49,
+      "mark3": 99
+    }
+  },
+  {
+    "class": "LightTrial",
+    "args": {
+      "account": "Vadim",
+      "mark1": 16,
+      "mark2": 77
+    }
+  },
+  {
+    "class": "StrongTrial",
+    "args": {
+      "account": "Maksim",
+      "mark1": 51,
+      "mark2": 11
+    }
+  },
+  {
+    "class": "StrongTrial",
+    "args": {
+      "account": "Katya",
+      "mark1": 98,
+      "mark2": 68
+    }
+  },
+  {
+    "class": "LightTrial",
+    "args": {
+      "account": "Andrey",
+      "mark1": 86,
+      "mark2": 59
+    }
+  }
+]
