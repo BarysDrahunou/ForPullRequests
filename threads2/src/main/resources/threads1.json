@@ -1,0 +1,54 @@
+[{
+  "class": "Trial",
+  "args": {
+    "account": "Vitali",
+    "mark1": 10,
+    "mark2": 22
+  }
+},
+{
+  "class": "ExtraTrial",
+  "args": {
+    "account": "Dimon",
+    "mark1": 10,
+    "mark2": 11,
+    "mark3": 44,
+    "mark4": 44
+  }
+},
+{
+  "class": "ExtraTrial",
+  "args": {
+    "account": "Egor",
+    "mark1": 50,
+    "mark2": 60,
+    "mark3": 20
+  },
+  "args1": {
+    "account": "Egor",
+    "mark1": 50,
+    "mark2": 60,
+    "mark3": 20
+  }
+},
+{
+  "class": "SomeOtherClass",
+  "args": {
+    "account": "Boris",
+    "mark1": 10,
+    "mark2": 11,
+    "mark3": 20
+  }
+},
+{
+  "class": "ExtraTrial",
+  "args": {
+    "account": "Dimon",
+    "mark1": 10,
+    "mark2": 11,
+    "mark3": 44,
+    "mark4": 44
+  }
+}
+
+]
