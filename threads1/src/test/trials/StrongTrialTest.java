@@ -6,6 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class StrongTrialTest {
+
     StrongTrial trial1;
     StrongTrial trial2;
     StrongTrial trial3;

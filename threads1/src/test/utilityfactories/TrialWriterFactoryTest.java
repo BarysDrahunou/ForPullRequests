@@ -8,24 +8,25 @@ import writers.*;
 import static org.junit.Assert.*;
 
 public class TrialWriterFactoryTest {
+
     TrialConsumer sqlConsumer;
     String configFileName = "src/main/resources/testconfig.properties";
 
     @Test
     public void getConsumerTest() {
-        sqlConsumer = new TrialWriterImplSQL("trials", "tria"
-                , "root", "root");
-        assertEquals(TrialWriterImplCSV.class, TrialWriterFactory.getConsumer(configFileName
+        sqlConsumer = new SqlTrialWriter();
+        sqlConsumer.setWriter("trials.trials.sql", configFileName);
+        assertEquals(CsvTrialWriter.class, TrialWriterFactory.getConsumer(configFileName
                 , "csvwriter").getClass());
-        assertEquals(TrialWriterImplJson.class, TrialWriterFactory.getConsumer(configFileName
+        assertEquals(JsonTrialWriter.class, TrialWriterFactory.getConsumer(configFileName
                 , "jsonwriter").getClass());
-        assertEquals(TrialWriterImplSQL.class, TrialWriterFactory.getConsumer(configFileName
+        assertEquals(SqlTrialWriter.class, TrialWriterFactory.getConsumer(configFileName
                 , "sqlwriter").getClass());
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test(expected = WrongArgumentException.class)
-    public void getConsumerWrongArgumentExceptionTest(){
+    public void getConsumerWrongArgumentExceptionTest() {
         try {
             TrialWriterFactory.getConsumer(configFileName
                     , "somewriter");
@@ -42,7 +43,6 @@ public class TrialWriterFactoryTest {
                         TrialWriterFactory.getConsumer(configFileName
                                 , "sqlwriters").getClass();
                     } catch (WrongArgumentException e3) {
-
                         TrialWriterFactory.getConsumer(configFileName, "sqlfaultywriter");
                     }
                 }

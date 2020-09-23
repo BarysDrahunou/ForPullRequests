@@ -6,6 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ExtraTrialTest {
+
     ExtraTrial trial1;
     ExtraTrial trial2;
     ExtraTrial trial3;
@@ -23,6 +24,7 @@ public class ExtraTrialTest {
         assertEquals(trial1, new ExtraTrial("Vasya", 12, 13, 10));
         assertEquals(trial2, new ExtraTrial(trial));
     }
+
     @Test
     public void setAccountTest() {
         trial3.setAccount("Vasya");
@@ -34,6 +36,7 @@ public class ExtraTrialTest {
         trial3.setMark3(15);
         assertEquals(15,trial3.getMark3());
     }
+
     @Test
     public void getMark3Test() {
         assertEquals(88, trial2.getMark3());

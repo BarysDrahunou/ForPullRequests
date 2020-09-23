@@ -2,9 +2,10 @@ package trials;
 
 import java.util.Objects;
 
+import static constants.TrialsConstants.*;
+
 public class ExtraTrial extends Trial {
 
-    static final int CLASS_CONSTANT_FOR_EXTRA_TRIAL = 40;
     private int mark3;
 
     public ExtraTrial() {
@@ -19,6 +20,16 @@ public class ExtraTrial extends Trial {
         this(trial.getAccount(), trial.getMark1(), trial.getMark2(), trial.getMark3());
     }
 
+    @Override
+    public Trial getCopy() {
+        return new ExtraTrial(this);
+    }
+
+    @Override
+    public boolean isPassed() {
+        return super.isPassed() && getMark3() >= CLASS_CONSTANT_FOR_EXTRA_TRIAL;
+    }
+
     public void setMark3(int mark3) {
         this.mark3 = mark3;
     }
@@ -28,19 +39,11 @@ public class ExtraTrial extends Trial {
     }
 
     @Override
-    public String toString() {
-        return String.format("%s; %s; trial is passed - %s"
-                , super.fieldsToString(), getMark3(), isPassed());
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ExtraTrial)) return false;
         if (!super.equals(o)) return false;
-
         ExtraTrial that = (ExtraTrial) o;
-
         return mark3 == that.mark3;
     }
 
@@ -50,12 +53,8 @@ public class ExtraTrial extends Trial {
     }
 
     @Override
-    public Trial getCopy() {
-        return new ExtraTrial(this);
-    }
-
-    @Override
-    public boolean isPassed() {
-        return super.isPassed() && getMark3() >= CLASS_CONSTANT_FOR_EXTRA_TRIAL;
+    public String toString() {
+        return String.format("%s; %s; trial is passed - %s"
+                , super.fieldsToString(), getMark3(), isPassed());
     }
 }

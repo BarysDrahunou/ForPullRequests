@@ -1,10 +1,12 @@
 package writers;
 
 import buffer.TrialBuffer;
-import trials.Trial;
+import trials.*;
+
+import static constants.TrialsConstants.*;
 
 public class TrialWriter {
-    protected static final String OUTPUT_PATH = "src/main/outputfolder/";
+
     private final TrialBuffer trialBuffer;
     private final TrialConsumer consumer;
 
@@ -14,9 +16,8 @@ public class TrialWriter {
     }
 
     public void go() {
-
         for (Trial trial = trialBuffer.takeTrial();
-             !trial.equals(new Trial("Final trial", 0, 0));
+             !trial.equals(FINAL_TRIAL);
              trial = trialBuffer.takeTrial()) {
             consumer.writeTrial(trial);
         }

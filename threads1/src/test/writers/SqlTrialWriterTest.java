@@ -16,17 +16,20 @@ import java.sql.SQLException;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class TrialWriterImplSQLTest {
+public class SqlTrialWriterTest {
 
     @Mock
     Connection connection;
     @Mock
     PreparedStatement preparedStatement;
-    static TrialWriterImplSQL trialWriterImplSQL;
+    static SqlTrialWriter sqlTrialWriter;
+    static String configFileName = "src/main/resources/testconfig.properties";
 
     @BeforeClass
-    public static void init(){
-        trialWriterImplSQL = new TrialWriterImplSQL("trials", "trials", "root", "root");
+    public static void init() {
+        sqlTrialWriter = new SqlTrialWriter();
+        sqlTrialWriter.setWriter("trials2.trials2.sql", configFileName);
+
     }
 
     @Before
@@ -36,30 +39,30 @@ public class TrialWriterImplSQLTest {
 
     @Test
     public void constructorTest() throws NoSuchFieldException {
-        Field field = TrialWriterImplSQL.class.getDeclaredField("preparedStatement");
+        Field field = SqlTrialWriter.class.getDeclaredField("preparedStatement");
         assertNotNull(field);
     }
 
     @Test(expected = WrongArgumentException.class)
-    public void constructorTestFails(){
-        new TrialWriterImplSQL("trials1", "trials1", "root", "root");
+    public void setWriterFails() {
+        new SqlTrialWriter().setWriter("trials1.trials1.sql", configFileName);
     }
 
     @Test
     public void writeTrial() throws NoSuchFieldException, IllegalAccessException, SQLException {
-        Field field = TrialWriterImplSQL.class.getDeclaredField("preparedStatement");
+        Field field = SqlTrialWriter.class.getDeclaredField("preparedStatement");
         field.setAccessible(true);
-        field.set(trialWriterImplSQL, preparedStatement);
-        trialWriterImplSQL.writeTrial(new Trial("Ment", 1, 1));
+        field.set(sqlTrialWriter, preparedStatement);
+        sqlTrialWriter.writeTrial(new Trial("Ment", 1, 1));
         verify(preparedStatement).executeUpdate();
     }
 
     @Test
     public void close() throws Exception {
-        Field field = TrialWriterImplSQL.class.getDeclaredField("connection");
+        Field field = SqlTrialWriter.class.getDeclaredField("connection");
         field.setAccessible(true);
-        field.set(trialWriterImplSQL, connection);
-        trialWriterImplSQL.close();
+        field.set(sqlTrialWriter, connection);
+        sqlTrialWriter.close();
         verify(connection).close();
     }
 }

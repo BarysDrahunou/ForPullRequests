@@ -8,18 +8,16 @@ public class TrialBuffer {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private Trial trial;
-    private volatile boolean emptyBufferFlag = true;
+    private volatile boolean isBufferEmpty = true;
 
     public synchronized void putTrial(Trial trial) {
         try {
-            synchronized (this) {
-                while (!emptyBufferFlag) {
-                    wait();
-                }
-                emptyBufferFlag = false;
-                this.trial = trial;
-                notifyAll();
+            while (!isBufferEmpty) {
+                wait();
             }
+            isBufferEmpty = false;
+            this.trial = trial;
+            notifyAll();
         } catch (InterruptedException e) {
             LOGGER.error(e);
             Thread.currentThread().interrupt();
@@ -27,19 +25,16 @@ public class TrialBuffer {
     }
 
     public synchronized Trial takeTrial() {
-
-        synchronized (this) {
-            while (emptyBufferFlag) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    LOGGER.error(e);
-                    Thread.currentThread().interrupt();
-                }
+        while (isBufferEmpty) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                LOGGER.error(e);
+                Thread.currentThread().interrupt();
             }
-            emptyBufferFlag = true;
-            notifyAll();
-            return trial;
         }
+        isBufferEmpty = true;
+        notifyAll();
+        return trial;
     }
 }

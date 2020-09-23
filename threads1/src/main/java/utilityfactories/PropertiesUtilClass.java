@@ -6,24 +6,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-public interface AbstractFactory {
+import static constants.ExceptionsMessages.*;
 
-     static Properties getProperties(String configurationFileName) {
+public class PropertiesUtilClass {
+
+    static Properties getProperties(String configurationFileName) {
         try (FileReader fileReader = new FileReader(configurationFileName)) {
             Properties properties = new Properties();
             properties.load(fileReader);
             return properties;
         } catch (IOException e) {
-            throw new WrongArgumentException("Can not find this path to properties"
-                    , configurationFileName, e);
+            throw new WrongArgumentException(INCORRECT_PATH_TO_PROPERTIES,
+                    configurationFileName, e);
         }
     }
 
-    static String getIfPropertyExists(String configurationFileName, String propertyName) {
+    public static String getIfPropertyExists(String configurationFileName, String propertyName) {
         Properties properties = getProperties(configurationFileName);
         String property = properties.getProperty(propertyName);
         if (property == null) {
-            throw new WrongArgumentException("Property with this name doesn't exist", propertyName);
+            throw new WrongArgumentException(PROPERTY_DOES_NOT_EXIST, propertyName);
         }
         return property;
     }

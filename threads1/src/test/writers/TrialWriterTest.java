@@ -11,6 +11,7 @@ import trials.Trial;
 import static org.mockito.Mockito.*;
 
 public class TrialWriterTest {
+
     @Mock
     TrialBuffer trialBuffer;
     @Mock

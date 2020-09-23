@@ -7,6 +7,7 @@ import trials.Trial;
 import static org.junit.Assert.*;
 
 public class TrialBufferTest {
+
     TrialBuffer trialBuffer;
     Trial trial;
 
@@ -24,5 +25,4 @@ public class TrialBufferTest {
         trialBuffer.putTrial(new Trial("Max",22,33));
         assertNotEquals(trialBuffer.takeTrial(),trial);
     }
-
 }

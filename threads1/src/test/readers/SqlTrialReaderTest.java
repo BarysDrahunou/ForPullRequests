@@ -14,7 +14,8 @@ import java.sql.Connection;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-public class TrialReaderImplSqlTest {
+public class SqlTrialReaderTest {
+
     String configFileName = "src/main/resources/testconfig.properties";
     TrialDao trialReaderImplSQL;
     @Mock
@@ -51,7 +52,7 @@ public class TrialReaderImplSqlTest {
     public void nextTrialAndFalseHasTrialTest() throws Exception {
         trialReaderImplSQL.hasTrial();
         assertEquals(trialReaderImplSQL.nextTrial().orElse(null)
-                , new Trial("Kent", 11, 22));
+                , new Trial("Ment", 22, 22));
         trialReaderImplSQL.hasTrial();
         assertEquals(trialReaderImplSQL.nextTrial().orElse(null)
                 , new ExtraTrial("Kot", 11, 2, 3));

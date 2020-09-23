@@ -12,8 +12,8 @@ public class ExtraTrialValidator extends TrialValidator {
     }
 
     @Override
-    public ExtraTrial getValidTrial(String account
-            , int mark1, int mark2, int mark3) {
+    public ExtraTrial getValidTrial(String account, int mark1,
+                                    int mark2, int mark3) {
         this.mark3 = mark3;
         this.extraTrial = new ExtraTrial();
         validateFieldsAndSet(account, mark1, mark2, extraTrial);
@@ -21,9 +21,9 @@ public class ExtraTrialValidator extends TrialValidator {
     }
 
     @Override
-    protected void validateFieldsAndSet(String account, int mark1, int mark2, Trial trial) {
+    protected void validateFieldsAndSet(String account, int mark1,
+                                        int mark2, Trial trial) {
         super.validateFieldsAndSet(account, mark1, mark2, trial);
         extraTrial.setMark3(validateIntegerField(mark3));
     }
-
 }

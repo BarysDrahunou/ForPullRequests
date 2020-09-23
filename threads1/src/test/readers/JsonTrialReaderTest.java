@@ -8,13 +8,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import trials.*;
 
-
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-public class TrialReaderImplJsonTest {
+public class JsonTrialReaderTest {
+
     String configFileName = "src/main/resources/testconfig.properties";
     TrialDao trialReaderImplJson;
     @Mock
@@ -43,7 +43,6 @@ public class TrialReaderImplJsonTest {
         assertTrue(trialReaderImplJson.nextTrial().isEmpty());
         assertEquals(trialReaderImplJson.nextTrial().orElse(null)
                 , new ExtraTrial("Dimon", 10, 11, 44));
-
         assertFalse(trialReaderImplJson.hasTrial());
         trialReaderImplJson.close();
     }

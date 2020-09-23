@@ -1,9 +1,11 @@
 package readers;
 
 import buffer.TrialBuffer;
-import trials.Trial;
+import trials.*;
 
 import java.util.Optional;
+
+import static constants.TrialsConstants.*;
 
 public class TrialReader implements Runnable {
 
@@ -21,7 +23,6 @@ public class TrialReader implements Runnable {
             Optional<Trial> trial = trialDao.nextTrial();
             trial.ifPresent(trialBuffer::putTrial);
         }
-        trialBuffer.putTrial(new Trial("Final trial",0,0));
+        trialBuffer.putTrial(FINAL_TRIAL);
     }
-
 }

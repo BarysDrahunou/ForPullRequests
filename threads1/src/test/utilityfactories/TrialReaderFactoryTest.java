@@ -4,9 +4,9 @@ import myexceptions.WrongArgumentException;
 import org.junit.Before;
 import org.junit.Test;
 import readers.TrialDao;
-import readers.TrialReaderImplCSV;
-import readers.TrialReaderImplJson;
-import readers.TrialReaderImplSql;
+import readers.CsvTrialReader;
+import readers.JsonTrialReader;
+import readers.SqlTrialReader;
 
 import static org.junit.Assert.*;
 
@@ -19,10 +19,12 @@ public class TrialReaderFactoryTest {
 
     @Before
     public void init(){
-        csvImpl = new TrialReaderImplCSV("threads1.csv");
-        jsonImpl = new TrialReaderImplJson("threads1.json");
-        sqlImpl = new TrialReaderImplSql("trials1", "trials1"
-                , "root", "root");
+        csvImpl = new CsvTrialReader();
+        csvImpl.setReader("threads1.csv",configFileName);
+        jsonImpl = new JsonTrialReader();
+        jsonImpl.setReader("threads1.json",configFileName);
+        sqlImpl = new SqlTrialReader();
+        sqlImpl.setReader("trials1.trials1.sql",configFileName);
     }
 
     @Test
@@ -57,7 +59,6 @@ public class TrialReaderFactoryTest {
                                 , "noexistreader");
                     }
                 }
-
             }
         }
     }

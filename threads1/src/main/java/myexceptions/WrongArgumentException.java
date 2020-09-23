@@ -1,5 +1,7 @@
 package myexceptions;
 
+import static constants.ExceptionsMessages.*;
+
 public class WrongArgumentException extends IllegalArgumentException {
 
     private final String problemValue;
@@ -20,7 +22,6 @@ public class WrongArgumentException extends IllegalArgumentException {
 
     @Override
     public String getMessage() {
-        return String.format("%s - %s", problemValue, super.getMessage());
+        return String.format(STRING_FORMAT_FOR_EXCEPTIONS, problemValue, super.getMessage());
     }
-
 }
