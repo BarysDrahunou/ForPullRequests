@@ -86,7 +86,7 @@ public class JsonTrialReader implements TrialDao {
         this.reader = getJsonReader(reader);
         try {
             this.reader.beginArray();
-        } catch (IOException e) {
+        } catch (IOException | IllegalStateException e) {
             throw new WrongArgumentException(BEGIN_ARRAY_PROBLEM, reader, e);
         }
     }
@@ -99,6 +99,11 @@ public class JsonTrialReader implements TrialDao {
         } catch (FileNotFoundException | NullPointerException e) {
             throw new WrongArgumentException(FILE_DOES_NOT_EXIST, reader, e);
         }
+    }
+
+    @Override
+    public TrialDao getCopy() {
+        return new JsonTrialReader();
     }
 
     @Override

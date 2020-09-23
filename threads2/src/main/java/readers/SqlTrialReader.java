@@ -92,6 +92,11 @@ public class SqlTrialReader implements TrialDao {
     }
 
     @Override
+    public TrialDao getCopy() {
+        return new SqlTrialReader();
+    }
+
+    @Override
     public void close() throws SQLException {
         connection.close();
     }

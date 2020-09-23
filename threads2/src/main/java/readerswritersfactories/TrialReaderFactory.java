@@ -29,11 +29,12 @@ public class TrialReaderFactory implements AutoCloseable {
         List<TrialDao> allTrialDao = new ArrayList<>();
         for (String singleReader : allReaders) {
             String typeOfReader = FilenameUtils.getExtension(singleReader).toUpperCase();
-            TrialDao trialDao = trialDaoMap.computeIfAbsent(typeOfReader, key -> {
+            TrialDao trialDaoPattern = trialDaoMap.computeIfAbsent(typeOfReader, key -> {
                 throw new WrongArgumentException(INCORRECT_EXTENSION, reader);
             });
-            trialDao.setReader(reader, configurationFileName);
-            allTrialDao.add(trialDao);
+            TrialDao trialDAO = trialDaoPattern.getCopy();
+            trialDAO.setReader(singleReader, configurationFileName);
+            allTrialDao.add(trialDAO);
         }
         this.trialDaoList = allTrialDao;
         return allTrialDao;

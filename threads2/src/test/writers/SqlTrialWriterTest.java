@@ -28,7 +28,7 @@ public class SqlTrialWriterTest {
     @BeforeClass
     public static void init()  {
         sqlTrialWriter = new SqlTrialWriter();
-        sqlTrialWriter.setWriter("trials.trials.sql",configFileName);
+        sqlTrialWriter.setWriter("trials3.trials3.sql",configFileName);
     }
 
     @Before

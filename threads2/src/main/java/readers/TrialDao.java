@@ -14,6 +14,8 @@ public interface TrialDao extends AutoCloseable {
 
     void setReader(String reader, String configurationFileName);
 
+    TrialDao getCopy();
+
     @Override
     void close() throws IOException, SQLException;
 }

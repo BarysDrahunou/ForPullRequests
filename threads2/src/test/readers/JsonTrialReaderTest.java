@@ -45,6 +45,7 @@ public class JsonTrialReaderTest {
         assertTrue(trialReaderImplJson.nextTrial().isEmpty());
         assertEquals(trialReaderImplJson.nextTrial().orElse(null)
                 , new ExtraTrial("Dimon", 10, 11, 44));
+        assertTrue(trialReaderImplJson.nextTrial().isEmpty());
         assertFalse(trialReaderImplJson.hasTrial());
         trialReaderImplJson.close();
     }

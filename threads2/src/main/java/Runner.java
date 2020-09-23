@@ -22,7 +22,7 @@ public class Runner {
         try (TrialReaderFactory trialReaderFactory = new TrialReaderFactory();
              TrialWriterFactory trialWriterFactory = new TrialWriterFactory()) {
             BlockingQueue<Trial> drop = new ArrayBlockingQueue<>(QUEUE_SIZE, true);
-            List<TrialDao> allTrialDao = trialReaderFactory.getTrialDAO(configFileName, READER_NAME_IN_PROPERTIES);
+            List<TrialDao> allTrialDao = trialReaderFactory.getTrialDAO(configFileName, READERS_NAME_IN_PROPERTIES);
             ExecutorService executorService = Executors.newFixedThreadPool(allTrialDao.size());
             for (TrialDao trialDao : allTrialDao) {
                 TrialReader reader = new TrialReader(drop, trialDao);

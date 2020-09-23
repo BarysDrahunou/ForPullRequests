@@ -1,5 +1,6 @@
 package readerswritersfactories;
 
+import myexceptions.WrongArgumentException;
 import org.junit.Before;
 import org.junit.Test;
 import readers.TrialDao;
@@ -39,27 +40,27 @@ public class TrialReaderFactoryTest {
         assertEquals(sqlImpl.getClass(), trialDaoList.get(2).getClass());
     }
 
-    @Test
+    @Test(expected = WrongArgumentException.class)
     public void getTrialDAOIncorrectSQLFileNameTest() {
-        assertEquals(0, trialReaderFactory
-                .getTrialDAO(configFileName, "faultyreader3").size());
+        trialReaderFactory
+                .getTrialDAO(configFileName, "faultyreader3");
     }
 
-    @Test
+    @Test(expected = WrongArgumentException.class)
     public void getTrialDAONPETest() {
-        assertEquals(0, trialReaderFactory
-                .getTrialDAO(configFileName, "faultyreader2").size());
+        trialReaderFactory
+                .getTrialDAO(configFileName, "faultyreader2");
     }
 
-    @Test
+    @Test(expected = WrongArgumentException.class)
     public void getTrialDAOIllegalArgumentExceptionTest() {
-        assertEquals(0, trialReaderFactory
-                .getTrialDAO(configFileName, "faultyreader1").size());
+        trialReaderFactory
+                .getTrialDAO(configFileName, "faultyreader1");
     }
 
-    @Test
+    @Test(expected = WrongArgumentException.class)
     public void getTrialDAOWrongArgumentExceptionTest() {
-        assertEquals(0, trialReaderFactory
-                .getTrialDAO(configFileName, "faultyreader4").size());
+        trialReaderFactory
+                .getTrialDAO(configFileName, "faultyreader4");
     }
 }

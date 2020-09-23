@@ -1,5 +1,6 @@
 package readers;
 
+import myexceptions.WrongArgumentException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,16 +32,16 @@ public class SqlTrialReaderTest {
         field.set(trialReaderImplSQL, connection);
     }
 
-    @Test()
+    @Test(expected = WrongArgumentException.class)
     public void dataBaseDoesNotExist() {
-        assertTrue(new TrialReaderFactory().getTrialDAO(configFileName
-                , "databasedoesnotexist").size() == 0);
+        new TrialReaderFactory().getTrialDAO(configFileName
+                , "databasedoesnotexist");
     }
 
-    @Test
+    @Test(expected = WrongArgumentException.class)
     public void tableDoesNotExist() {
-        assertTrue(new TrialReaderFactory().getTrialDAO(configFileName
-                , "tabledoesnotexist").size() == 0);
+        new TrialReaderFactory().getTrialDAO(configFileName
+                , "tabledoesnotexist");
     }
 
     @Test

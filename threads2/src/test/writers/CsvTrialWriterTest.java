@@ -29,12 +29,12 @@ public class CsvTrialWriterTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        trialConsumer = new CsvTrialWriter();
     }
 
     @Test
-    public void writeTrialTest() throws IOException, NoSuchFieldException, IllegalAccessException {
-        trialConsumer = new CsvTrialWriter();
-        trialConsumer.setWriter("writer.csv",OUTPUT_PATH);
+    public void firstWriteTrialTest() throws IOException, NoSuchFieldException, IllegalAccessException {
+        trialConsumer.setWriter("writer.csv", OUTPUT_PATH);
         Field field = CsvTrialWriter.class.getDeclaredField("output");
         field.setAccessible(true);
         field.set(trialConsumer, output);
@@ -44,14 +44,12 @@ public class CsvTrialWriterTest {
     }
 
     @Test(expected = WrongArgumentException.class)
-    public void writeTrialTestAlreadyExist() {
-        trialConsumer.setWriter("writer.csv",OUTPUT_PATH);
+    public void secondWriteTrialTestAlreadyExist() {
+        trialConsumer.setWriter("writer.csv", OUTPUT_PATH);
     }
 
     @Test
-    public void closeTest() throws Exception {
-        trialConsumer = new CsvTrialWriter();
-        trialConsumer.setWriter("writer.csv",OUTPUT_PATH);
+    public void thirdCloseTest() throws Exception {
         Field field = CsvTrialWriter.class.getDeclaredField("output");
         field.setAccessible(true);
         field.set(trialConsumer, output);

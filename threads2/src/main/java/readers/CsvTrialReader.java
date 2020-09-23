@@ -70,6 +70,11 @@ public class CsvTrialReader implements TrialDao {
     }
 
     @Override
+    public TrialDao getCopy() {
+        return new CsvTrialReader();
+    }
+
+    @Override
     public void close() {
         scanner.close();
     }

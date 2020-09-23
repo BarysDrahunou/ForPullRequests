@@ -6,7 +6,7 @@ public class ReaderWriterConstants {
 
     public static final int QUEUE_SIZE = new Random().nextInt(100) + 1;
     public static final String DEFAULT_PATH_TO_PROPERTIES = "src/main/resources/configuration.properties";
-    public static final String READER_NAME_IN_PROPERTIES = "reader";
+    public static final String READERS_NAME_IN_PROPERTIES = "readers";
     public static final String WRITER_NAME_IN_PROPERTIES = "writer";
     public static final String NAME_OF_LOGIN_PROPERTY_INTO_CONFIG_FILE = "username";
     public static final String NAME_OF_PASSWORD_PROPERTY_INTO_CONFIG_FILE = "password";
