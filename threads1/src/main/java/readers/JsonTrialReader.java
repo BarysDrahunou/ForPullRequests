@@ -86,7 +86,7 @@ public class JsonTrialReader implements TrialDao {
         this.reader = getJsonReader(reader);
         try {
             this.reader.beginArray();
-        } catch (IOException e) {
+        } catch (IOException | IllegalStateException e) {
             throw new WrongArgumentException(BEGIN_ARRAY_PROBLEM, reader, e);
         }
     }
