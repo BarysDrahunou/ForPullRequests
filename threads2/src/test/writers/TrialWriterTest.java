@@ -11,6 +11,7 @@ import java.util.concurrent.BlockingQueue;
 import static org.mockito.Mockito.*;
 
 public class TrialWriterTest {
+
     @Mock
     BlockingQueue<Trial> blockingQueue;
     @Mock

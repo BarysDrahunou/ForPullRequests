@@ -14,7 +14,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("all")
-public class TrialReaderImplSqlTest {
+public class SqlTrialReaderTest {
+
     String configFileName = "src/main/resources/testconfig.properties";
     TrialDao trialReaderImplSQL;
     @Mock

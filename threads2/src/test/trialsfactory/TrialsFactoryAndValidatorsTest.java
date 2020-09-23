@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-public class FactoryOfTrialsAndValidatorsTest {
+public class TrialsFactoryAndValidatorsTest {
 
     @Before
     public void init() {
@@ -19,27 +19,26 @@ public class FactoryOfTrialsAndValidatorsTest {
 
     @Test
     public void getTrialTest() {
-
-        Trial trial = FactoryOfTrials.getTrial("Trial", "Vadim"
+        Trial trial = TrialsFactory.getTrial("Trial", "Vadim"
                 , 50, 80, 0).orElse(null);
         assertEquals(new Trial("Vadim", 50, 80),trial);
-        Trial trial1=FactoryOfTrials.getTrial("ExtraTrial", "Vadim"
+        Trial trial1= TrialsFactory.getTrial("ExtraTrial", "Vadim"
                 , 50, 80, 0).orElse(null);
         assertEquals(new ExtraTrial("Vadim", 50, 80,0),trial1);
-        Optional<Trial> trial2=FactoryOfTrials.getTrial("LightTrial", ""
+        Optional<Trial> trial2= TrialsFactory.getTrial("LightTrial", ""
                 , 50, 80, 0);
         assertEquals(Optional.empty(),trial2);
-        Optional<Trial> trial3=FactoryOfTrials.getTrial("StrongTrial", "Vadim"
+        Optional<Trial> trial3= TrialsFactory.getTrial("StrongTrial", "Vadim"
                 , -50, 80, 0);
         assertEquals(Optional.empty(),trial3);
-        Optional<Trial> trial4=FactoryOfTrials.getTrial("SomeNewTrial", "Vadim"
+        Optional<Trial> trial4= TrialsFactory.getTrial("SomeNewTrial", "Vadim"
                 , 50, 800, 0);
         assertEquals(Optional.empty(),trial4);
     }
 
     @Test
     public void getTrialClassIllegalArgumentExceptionTest() {
-        Optional<Trial> trial=FactoryOfTrials.getTrial("SomeNewTrial", "Vadim"
+        Optional<Trial> trial= TrialsFactory.getTrial("SomeNewTrial", "Vadim"
                 , 50, 800, 0);
         assertEquals(Optional.empty(),trial);
     }

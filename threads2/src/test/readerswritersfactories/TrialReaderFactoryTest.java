@@ -3,9 +3,9 @@ package readerswritersfactories;
 import org.junit.Before;
 import org.junit.Test;
 import readers.TrialDao;
-import readers.TrialReaderImplCSV;
-import readers.TrialReaderImplJson;
-import readers.TrialReaderImplSql;
+import readers.CsvTrialReader;
+import readers.JsonTrialReader;
+import readers.SqlTrialReader;
 
 import java.util.List;
 
@@ -20,11 +20,13 @@ public class TrialReaderFactoryTest {
     TrialReaderFactory trialReaderFactory;
 
     @Before
-    public void init(){
-        csvImpl = new TrialReaderImplCSV("threads1.csv");
-        jsonImpl = new TrialReaderImplJson("threads1.json");
-        sqlImpl = new TrialReaderImplSql("trials1", "trials1"
-                , "root", "root");
+    public void init() {
+        csvImpl = new CsvTrialReader();
+        csvImpl.setReader("threads1.csv", configFileName);
+        jsonImpl = new JsonTrialReader();
+        jsonImpl.setReader("threads1.json", configFileName);
+        sqlImpl = new SqlTrialReader();
+        sqlImpl.setReader("trials1.trials1.sql", configFileName);
         trialReaderFactory = new TrialReaderFactory();
     }
 

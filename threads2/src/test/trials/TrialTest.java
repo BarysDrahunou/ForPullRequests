@@ -6,6 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TrialTest {
+
     Trial trial1;
     Trial trial2;
     Trial trial3;
@@ -29,11 +30,13 @@ public class TrialTest {
         trial3.setAccount("Vasya");
         assertEquals("Vasya",trial3.getAccount());
     }
+
     @Test
     public void setMark1Test() {
         trial3.setMark1(15);
         assertEquals(15,trial3.getMark1());
     }
+
     @Test
     public void setMark2Test() {
         trial3.setMark2(15);
@@ -85,6 +88,7 @@ public class TrialTest {
         assertNotEquals(new Trial("Dima", 61, 41).hashCode(), trial2.hashCode());
         assertNotEquals(new Trial("Dima", 60, 40).hashCode(), trial2.hashCode());
     }
+
     @Test
     public void copyTest() {
         assertEquals(trial1.getCopy(), trial1);
@@ -92,6 +96,7 @@ public class TrialTest {
         assertNotSame(trial1.getCopy(), trial1);
         assertNotSame(trial2.getCopy(), trial2);
     }
+
     @Test
     public void isPassedTest() {
         assertFalse(trial1.isPassed());

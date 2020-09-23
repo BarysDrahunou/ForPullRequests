@@ -6,58 +6,37 @@ import writers.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
+import static constants.ExceptionsMessages.*;
+import static constants.ReaderWriterConstants.*;
 
-public class TrialWriterFactory implements AbstractFactory {
-    private static final String NAME_OF_LOGIN_PROPERTY_INTO_CONFIG_FILE = "username";
-    private static final String NAME_OF_PASSWORD_PROPERTY_INTO_CONFIG_FILE = "password";
-    private static String configFileName;
+public class TrialWriterFactory implements AutoCloseable {
 
-    public static TrialConsumer getConsumer(String configurationFileName, String writerNameInProperties) {
-        configFileName = configurationFileName;
-        String writer = AbstractFactory.getIfPropertyExists(configurationFileName
-                , writerNameInProperties);
-        try {
-            String typeOfWriter = FilenameUtils.getExtension(writer).toUpperCase();
-            return WriterImplementationKind.valueOf(typeOfWriter)
-                    .getTrialConsumer(writer);
-        } catch (WrongArgumentException e) {
-            throw e;
-        } catch (IllegalArgumentException e) {
-            throw new WrongArgumentException("Incorrect extension format", writer, e);
-        }
+    private static final Map<String, TrialConsumer> trialConsumersMap = new HashMap<>();
+    private TrialConsumer trialConsumer;
+
+    static {
+        trialConsumersMap.put(CSV, new CsvTrialWriter());
+        trialConsumersMap.put(JSON, new JsonTrialWriter());
+        trialConsumersMap.put(SQL, new SqlTrialWriter());
     }
 
-    private enum WriterImplementationKind {
-        CSV {
-            @Override
-            TrialConsumer getTrialConsumer(String line) {
-                return new TrialWriterImplCSV(line);
-            }
-        },
-        JSON {
-            @Override
-            TrialConsumer getTrialConsumer(String line) {
-                return new TrialWriterImplJson(line);
-            }
-        },
-        SQL {
-            @Override
-            TrialConsumer getTrialConsumer(String line) {
-                String[] dataBaseAndTableNames = FilenameUtils.removeExtension(line).split("\\.");
-                if (dataBaseAndTableNames.length != 2) {
-                    throw new WrongArgumentException("incorrect name of writer file", line);
-                }
-                String nameOfDataBase = dataBaseAndTableNames[0];
-                String nameOfTable = dataBaseAndTableNames[1];
-                String login = AbstractFactory.getIfPropertyExists(configFileName
-                        , NAME_OF_LOGIN_PROPERTY_INTO_CONFIG_FILE);
-                String password = AbstractFactory.getIfPropertyExists(configFileName
-                        , NAME_OF_PASSWORD_PROPERTY_INTO_CONFIG_FILE);
-                return new TrialWriterImplSQL(nameOfDataBase, nameOfTable, login, password);
-            }
-        };
+    public TrialConsumer getConsumer(String configurationFileName, String writerNameInProperties) {
+        String writer = PropertiesUtilClass.getIfPropertyExists(configurationFileName,
+                writerNameInProperties);
+        String typeOfWriter = FilenameUtils.getExtension(writer).toUpperCase();
+        TrialConsumer trialConsumer = trialConsumersMap.computeIfAbsent(typeOfWriter, key -> {
+            throw new WrongArgumentException(INCORRECT_EXTENSION, writer);
+        });
+        trialConsumer.setWriter(writer, configurationFileName);
+        this.trialConsumer = trialConsumer;
+        return trialConsumer;
+    }
 
-        abstract TrialConsumer getTrialConsumer(String line);
+    @Override
+    public void close() throws IOException, SQLException {
+        trialConsumer.close();
     }
 }

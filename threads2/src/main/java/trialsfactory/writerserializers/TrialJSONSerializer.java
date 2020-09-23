@@ -6,6 +6,9 @@ import trials.Trial;
 
 import java.io.IOException;
 
+import static constants.ExceptionsMessages.*;
+import static constants.TrialsConstants.*;
+
 
 public class TrialJSONSerializer {
 
@@ -15,23 +18,21 @@ public class TrialJSONSerializer {
             writeEntireTrial(trial, writer);
             writer.endObject();
         } catch (IOException e) {
-            throw new WrongArgumentException("There are some problems with this trial to write"
-                    , trial.toString(), e);
+            throw new WrongArgumentException(IO_EXCEPTION_WITH_WRITER, trial.toString(), e);
         }
     }
 
     private void writeEntireTrial(Trial trial, JsonWriter writer) throws IOException {
-        writer.name("class").value(trial.getClass().getSimpleName());
-        writer.name("args");
+        writer.name(TRIAL_CLASS).value(trial.getClass().getSimpleName());
+        writer.name(TRIAL_ARGS);
         writer.beginObject();
         writeArgs(trial, writer);
         writer.endObject();
     }
 
     protected void writeArgs(Trial trial, JsonWriter writer) throws IOException {
-        writer.name("account").value(trial.getAccount());
-        writer.name("mark1").value(trial.getMark1());
-        writer.name("mark2").value(trial.getMark2());
+        writer.name(TRIAL_ACCOUNT).value(trial.getAccount());
+        writer.name(TRIAL_MARK1).value(trial.getMark1());
+        writer.name(TRIAL_MARK2).value(trial.getMark2());
     }
-
 }

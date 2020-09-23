@@ -8,8 +8,10 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 
 public class WrongArgumentExceptionTest {
+
     WrongArgumentException wrongArgumentException1;
     WrongArgumentException wrongArgumentException2;
+
     @Before
     public void init() {
         wrongArgumentException1 = new WrongArgumentException("Problem value"

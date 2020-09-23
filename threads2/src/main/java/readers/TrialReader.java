@@ -7,6 +7,8 @@ import trials.Trial;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
+import static constants.TrialsConstants.*;
+
 public class TrialReader implements Runnable {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -27,7 +29,7 @@ public class TrialReader implements Runnable {
                     blockingQueue.put(trial.get());
                 }
             }
-            blockingQueue.put(new Trial("Final trial", 0, 0));
+            blockingQueue.put(FINAL_TRIAL);
         } catch (InterruptedException e) {
             LOGGER.error(e);
             Thread.currentThread().interrupt();

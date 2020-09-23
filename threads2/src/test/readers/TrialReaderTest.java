@@ -14,6 +14,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TrialReaderTest {
+
     @Mock
     BlockingQueue<Trial> blockingQueue;
     @Mock

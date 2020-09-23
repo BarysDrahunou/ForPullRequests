@@ -6,10 +6,12 @@ import trials.Trial;
 
 import java.util.concurrent.BlockingQueue;
 
+import static constants.TrialsConstants.*;
+
 public class TrialWriter {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    protected static final String OUTPUT_PATH = "src/main/outputfolder/";
+    private static final int ZERO = 0;
     private final BlockingQueue<Trial> blockingQueue;
     private final TrialConsumer consumer;
     private int amountOfLeftReaders;
@@ -22,15 +24,14 @@ public class TrialWriter {
 
     public void go() {
         try {
-            while (amountOfLeftReaders > 0) {
+            while (amountOfLeftReaders > ZERO) {
                 Trial trial = blockingQueue.take();
-                if (trial.equals(new Trial("Final trial", 0, 0))) {
+                if (trial.equals(FINAL_TRIAL)) {
                     amountOfLeftReaders--;
                 } else {
                     consumer.writeTrial(trial);
                 }
             }
-
         } catch (InterruptedException e) {
             LOGGER.error(e);
             Thread.currentThread().interrupt();

@@ -2,14 +2,16 @@ package trials;
 
 import java.util.Objects;
 
+import static constants.TrialsConstants.*;
+
 public class Trial {
 
-    static final int CLASS_CONSTANT = 50;
     private String account;
     private int mark1;
     private int mark2;
 
-    public Trial(){}
+    public Trial() {
+    }
 
     public Trial(String account, int mark1, int mark2) {
         this.account = account;
@@ -19,6 +21,14 @@ public class Trial {
 
     public Trial(Trial trial) {
         this(trial.getAccount(), trial.getMark1(), trial.getMark2());
+    }
+
+    public Trial getCopy() {
+        return new Trial(this);
+    }
+
+    public boolean isPassed() {
+        return getMark1() + getMark2() >= CLASS_CONSTANT;
     }
 
     public void setAccount(String account) {
@@ -46,23 +56,10 @@ public class Trial {
     }
 
     @Override
-    public String toString() {
-        return String.format("%s; trial is passed - %s"
-                , fieldsToString(), isPassed());
-    }
-
-    public String fieldsToString() {
-        return String.format("%s; His marks : %s; %s"
-                , getAccount(), getMark1(), getMark2());
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Trial)) return false;
-
         Trial trial = (Trial) o;
-
         if (mark1 != trial.mark1) return false;
         if (mark2 != trial.mark2) return false;
         return Objects.equals(account, trial.account);
@@ -73,11 +70,14 @@ public class Trial {
         return Objects.hash(account, mark1, mark2);
     }
 
-    public Trial getCopy() {
-        return new Trial(this);
+    @Override
+    public String toString() {
+        return String.format("%s; trial is passed - %s"
+                , fieldsToString(), isPassed());
     }
 
-    public boolean isPassed() {
-        return getMark1() + getMark2() >= CLASS_CONSTANT;
+    public String fieldsToString() {
+        return String.format("%s; His marks : %s; %s"
+                , getAccount(), getMark1(), getMark2());
     }
 }

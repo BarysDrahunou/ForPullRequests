@@ -15,8 +15,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import static org.mockito.Mockito.*;
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TrialWriterImplCSVTest {
+public class CsvTrialWriterTest {
+
+    String OUTPUT_PATH = "src/main/outputfolder/";
     @Mock
     FileWriter output;
     @Mock
@@ -30,8 +33,9 @@ public class TrialWriterImplCSVTest {
 
     @Test
     public void writeTrialTest() throws IOException, NoSuchFieldException, IllegalAccessException {
-        trialConsumer = new TrialWriterImplCSV("writer.csv");
-        Field field = TrialWriterImplCSV.class.getDeclaredField("output");
+        trialConsumer = new CsvTrialWriter();
+        trialConsumer.setWriter("writer.csv",OUTPUT_PATH);
+        Field field = CsvTrialWriter.class.getDeclaredField("output");
         field.setAccessible(true);
         field.set(trialConsumer, output);
         ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
@@ -40,14 +44,15 @@ public class TrialWriterImplCSVTest {
     }
 
     @Test(expected = WrongArgumentException.class)
-    public void writeTrialTestAlreadyExist(){
-        trialConsumer = new TrialWriterImplCSV("writer.csv");
+    public void writeTrialTestAlreadyExist() {
+        trialConsumer.setWriter("writer.csv",OUTPUT_PATH);
     }
 
     @Test
     public void closeTest() throws Exception {
-        trialConsumer = new TrialWriterImplCSV("newWriter.csv");
-        Field field = TrialWriterImplCSV.class.getDeclaredField("output");
+        trialConsumer = new CsvTrialWriter();
+        trialConsumer.setWriter("writer.csv",OUTPUT_PATH);
+        Field field = CsvTrialWriter.class.getDeclaredField("output");
         field.setAccessible(true);
         field.set(trialConsumer, output);
         trialConsumer.close();

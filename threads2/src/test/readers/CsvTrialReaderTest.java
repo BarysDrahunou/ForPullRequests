@@ -13,7 +13,8 @@ import java.util.Scanner;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-public class TrialReaderImplCSVTest {
+public class CsvTrialReaderTest {
+
     String configFileName = "src/main/resources/testconfig.properties";
     @Mock
     Scanner scanner;
@@ -53,5 +54,4 @@ public class TrialReaderImplCSVTest {
         trialReaderImplCSV.close();
         verify(scanner).close();
     }
-
 }

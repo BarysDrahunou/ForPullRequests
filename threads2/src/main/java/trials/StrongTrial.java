@@ -1,5 +1,7 @@
 package trials;
 
+import static constants.TrialsConstants.*;
+
 public class StrongTrial extends Trial {
 
     public StrongTrial(){}

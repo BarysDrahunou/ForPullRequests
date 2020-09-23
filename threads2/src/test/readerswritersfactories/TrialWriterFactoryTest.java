@@ -1,6 +1,7 @@
 package readerswritersfactories;
 
 import myexceptions.WrongArgumentException;
+import org.junit.Before;
 import org.junit.Test;
 
 import writers.*;
@@ -8,18 +9,25 @@ import writers.*;
 import static org.junit.Assert.*;
 
 public class TrialWriterFactoryTest {
+
     TrialConsumer sqlConsumer;
     String configFileName = "src/main/resources/testconfig.properties";
+    TrialWriterFactory trialWriterFactory;
+
+    @Before
+    public void init(){
+        sqlConsumer = new SqlTrialWriter();
+        trialWriterFactory=new TrialWriterFactory();
+    }
 
     @Test
     public void getConsumerTest() {
-        sqlConsumer = new TrialWriterImplSQL("trials", "tria"
-                , "root", "root");
-        assertEquals(TrialWriterImplCSV.class, TrialWriterFactory.getConsumer(configFileName
+        sqlConsumer.setWriter("trials.trials.sql", configFileName);
+        assertEquals(CsvTrialWriter.class, trialWriterFactory.getConsumer(configFileName
                 , "csvwriter").getClass());
-        assertEquals(TrialWriterImplJson.class, TrialWriterFactory.getConsumer(configFileName
+        assertEquals(JsonTrialWriter.class, trialWriterFactory.getConsumer(configFileName
                 , "jsonwriter").getClass());
-        assertEquals(TrialWriterImplSQL.class, TrialWriterFactory.getConsumer(configFileName
+        assertEquals(SqlTrialWriter.class, trialWriterFactory.getConsumer(configFileName
                 , "sqlwriter").getClass());
     }
 
@@ -27,23 +35,22 @@ public class TrialWriterFactoryTest {
     @Test(expected = WrongArgumentException.class)
     public void getConsumerWrongArgumentExceptionTest() {
         try {
-            TrialWriterFactory.getConsumer(configFileName
+            trialWriterFactory.getConsumer(configFileName
                     , "somewriter");
         } catch (WrongArgumentException e) {
             try {
-                TrialWriterFactory.getConsumer(configFileName
+                trialWriterFactory.getConsumer(configFileName
                         , "faultywriter1");
             } catch (WrongArgumentException e1) {
                 try {
-                    TrialWriterFactory.getConsumer(configFileName
+                    trialWriterFactory.getConsumer(configFileName
                             , "faultywriter2");
                 } catch (WrongArgumentException e2) {
                     try {
-                        TrialWriterFactory.getConsumer(configFileName
+                        trialWriterFactory.getConsumer(configFileName
                                 , "sqlwriters").getClass();
                     } catch (WrongArgumentException e3) {
-
-                        TrialWriterFactory.getConsumer(configFileName, "sqlfaultywriter");
+                        trialWriterFactory.getConsumer(configFileName, "sqlfaultywriter");
                     }
                 }
             }
