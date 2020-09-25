@@ -28,15 +28,15 @@ public class SqlTrialWriter implements TrialConsumer {
     private static final String SQL_FOR_INSERTION = "INSERT INTO %s.%s " +
             "(CLASS, ACCOUNT, MARK1, MARK2, MARK3) VALUES (?,?,?,?,?)";
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final Map<String, TrialSQLSerializer> TRIAL_SQL_SERIALIZERS_MAP = new HashMap<>();
     private Connection connection;
     private PreparedStatement preparedStatement;
-    private static final Map<String, TrialSQLSerializer> trialSQLSerializersMap = new HashMap<>();
 
     static {
-        trialSQLSerializersMap.put(TRIAL, new TrialSQLSerializer());
-        trialSQLSerializersMap.put(LIGHT_TRIAL, new TrialSQLSerializer());
-        trialSQLSerializersMap.put(STRONG_TRIAL, new TrialSQLSerializer());
-        trialSQLSerializersMap.put(EXTRA_TRIAL, new ExtraTrialSQLSerializer());
+        TRIAL_SQL_SERIALIZERS_MAP.put(TRIAL, new TrialSQLSerializer());
+        TRIAL_SQL_SERIALIZERS_MAP.put(LIGHT_TRIAL, new TrialSQLSerializer());
+        TRIAL_SQL_SERIALIZERS_MAP.put(STRONG_TRIAL, new TrialSQLSerializer());
+        TRIAL_SQL_SERIALIZERS_MAP.put(EXTRA_TRIAL, new ExtraTrialSQLSerializer());
     }
 
     public SqlTrialWriter() {
@@ -46,7 +46,7 @@ public class SqlTrialWriter implements TrialConsumer {
     public void writeTrial(Trial trial) {
         String trialKind = WriterUtilClass.getTrialKind(trial);
         try {
-            preparedStatement = trialSQLSerializersMap.get(trialKind)
+            preparedStatement = TRIAL_SQL_SERIALIZERS_MAP.get(trialKind)
                     .setPreparedStatementAndGet(trial, preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

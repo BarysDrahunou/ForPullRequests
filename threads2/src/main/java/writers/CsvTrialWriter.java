@@ -17,14 +17,14 @@ import static constants.TrialsConstants.*;
 public class CsvTrialWriter implements TrialConsumer {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    protected FileWriter output;
-    private static final Map<String, TrialCSVSerializer> trialCSVSerializersMap = new HashMap<>();
+    private static final Map<String, TrialCSVSerializer> TRIAL_CSV_SERIALIZERS_MAP = new HashMap<>();
+    private FileWriter output;
 
     static {
-        trialCSVSerializersMap.put(TRIAL, new TrialCSVSerializer());
-        trialCSVSerializersMap.put(LIGHT_TRIAL, new TrialCSVSerializer());
-        trialCSVSerializersMap.put(STRONG_TRIAL, new TrialCSVSerializer());
-        trialCSVSerializersMap.put(EXTRA_TRIAL, new ExtraTrialCSVSerializer());
+        TRIAL_CSV_SERIALIZERS_MAP.put(TRIAL, new TrialCSVSerializer());
+        TRIAL_CSV_SERIALIZERS_MAP.put(LIGHT_TRIAL, new TrialCSVSerializer());
+        TRIAL_CSV_SERIALIZERS_MAP.put(STRONG_TRIAL, new TrialCSVSerializer());
+        TRIAL_CSV_SERIALIZERS_MAP.put(EXTRA_TRIAL, new ExtraTrialCSVSerializer());
     }
 
     public CsvTrialWriter() {
@@ -41,7 +41,7 @@ public class CsvTrialWriter implements TrialConsumer {
 
     private String serializeTrial(Trial trial) {
         String trialKind = WriterUtilClass.getTrialKind(trial);
-        return trialCSVSerializersMap.get(trialKind).serialize(trial);
+        return TRIAL_CSV_SERIALIZERS_MAP.get(trialKind).serialize(trial);
     }
 
     @Override

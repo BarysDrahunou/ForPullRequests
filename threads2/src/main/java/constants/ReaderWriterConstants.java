@@ -2,7 +2,7 @@ package constants;
 
 import java.util.Random;
 
-public class ReaderWriterConstants {
+public final class ReaderWriterConstants {
 
     public static final int QUEUE_SIZE = new Random().nextInt(100) + 1;
     public static final String DEFAULT_PATH_TO_PROPERTIES = "src/main/resources/configuration.properties";

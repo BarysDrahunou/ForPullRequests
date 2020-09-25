@@ -2,7 +2,7 @@ package constants;
 
 import trials.Trial;
 
-public class TrialsConstants {
+public final class TrialsConstants {
 
     public static final Trial FINAL_TRIAL = new Trial("Final trial", 0, 0);
     public static final int CLASS_CONSTANT = 50;

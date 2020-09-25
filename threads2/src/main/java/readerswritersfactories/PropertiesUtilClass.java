@@ -8,7 +8,10 @@ import java.util.Properties;
 
 import static constants.ExceptionsMessages.*;
 
-public class PropertiesUtilClass {
+public final class PropertiesUtilClass {
+
+    private PropertiesUtilClass() {
+    }
 
     static Properties getProperties(String configurationFileName) {
         try (FileReader fileReader = new FileReader(configurationFileName)) {

@@ -14,20 +14,20 @@ import static constants.ReaderWriterConstants.*;
 
 public class TrialWriterFactory implements AutoCloseable {
 
-    private static final Map<String, TrialConsumer> trialConsumersMap = new HashMap<>();
+    private static final Map<String, TrialConsumer> TRIAL_CONSUMERS_MAP = new HashMap<>();
     private TrialConsumer trialConsumer;
 
     static {
-        trialConsumersMap.put(CSV, new CsvTrialWriter());
-        trialConsumersMap.put(JSON, new JsonTrialWriter());
-        trialConsumersMap.put(SQL, new SqlTrialWriter());
+        TRIAL_CONSUMERS_MAP.put(CSV, new CsvTrialWriter());
+        TRIAL_CONSUMERS_MAP.put(JSON, new JsonTrialWriter());
+        TRIAL_CONSUMERS_MAP.put(SQL, new SqlTrialWriter());
     }
 
     public TrialConsumer getConsumer(String configurationFileName, String writerNameInProperties) {
         String writer = PropertiesUtilClass.getIfPropertyExists(configurationFileName,
                 writerNameInProperties);
-        String typeOfWriter = FilenameUtils.getExtension(writer).toUpperCase();
-        TrialConsumer trialConsumer = trialConsumersMap.computeIfAbsent(typeOfWriter, key -> {
+        String writerType = FilenameUtils.getExtension(writer).toUpperCase();
+        TrialConsumer trialConsumer = TRIAL_CONSUMERS_MAP.computeIfAbsent(writerType, key -> {
             throw new WrongArgumentException(INCORRECT_EXTENSION, writer);
         });
         trialConsumer.setWriter(writer, configurationFileName);

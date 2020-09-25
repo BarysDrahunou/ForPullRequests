@@ -1,7 +1,8 @@
 package readerswritersfactories;
 
-import myexceptions.WrongArgumentException;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import readers.*;
 
 import java.io.*;
@@ -13,13 +14,14 @@ import static constants.ReaderWriterConstants.*;
 
 public class TrialReaderFactory implements AutoCloseable {
 
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Map<String, TrialDao> TRIAL_DAO_PATTERNS_MAP = new HashMap<>();
     private List<TrialDao> trialDaoList;
-    private static final Map<String, TrialDao> trialDaoMap = new HashMap<>();
 
     static {
-        trialDaoMap.put(CSV, new CsvTrialReader());
-        trialDaoMap.put(JSON, new JsonTrialReader());
-        trialDaoMap.put(SQL, new SqlTrialReader());
+        TRIAL_DAO_PATTERNS_MAP.put(CSV, new CsvTrialReader());
+        TRIAL_DAO_PATTERNS_MAP.put(JSON, new JsonTrialReader());
+        TRIAL_DAO_PATTERNS_MAP.put(SQL, new SqlTrialReader());
     }
 
     public List<TrialDao> getTrialDAO(String configurationFileName, String readerNameInProperties) {
@@ -28,13 +30,15 @@ public class TrialReaderFactory implements AutoCloseable {
         String[] allReaders = reader.split(CSV_SEPARATOR);
         List<TrialDao> allTrialDao = new ArrayList<>();
         for (String singleReader : allReaders) {
-            String typeOfReader = FilenameUtils.getExtension(singleReader).toUpperCase();
-            TrialDao trialDaoPattern = trialDaoMap.computeIfAbsent(typeOfReader, key -> {
-                throw new WrongArgumentException(INCORRECT_EXTENSION, reader);
-            });
-            TrialDao trialDAO = trialDaoPattern.getCopy();
-            trialDAO.setReader(singleReader, configurationFileName);
-            allTrialDao.add(trialDAO);
+            String readerType = FilenameUtils.getExtension(singleReader).toUpperCase();
+            TrialDao trialDaoPattern = TRIAL_DAO_PATTERNS_MAP.get(readerType);
+            if (trialDaoPattern != null) {
+                TrialDao trialDAO = trialDaoPattern.getCopy();
+                trialDAO.setReader(singleReader, configurationFileName);
+                allTrialDao.add(trialDAO);
+            } else {
+                LOGGER.error(String.format("%s - %s", INCORRECT_EXTENSION, singleReader));
+            }
         }
         this.trialDaoList = allTrialDao;
         return allTrialDao;

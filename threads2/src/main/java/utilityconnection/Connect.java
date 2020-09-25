@@ -9,7 +9,10 @@ import java.sql.*;
 import static constants.ExceptionsMessages.*;
 import static constants.ReaderWriterConstants.*;
 
-public class Connect {
+public final class Connect {
+
+    private Connect() {
+    }
 
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306?serverTimezone=UTC";
@@ -30,8 +33,7 @@ public class Connect {
             (Connection connection, String dataBaseName) throws SQLException {
         try (ResultSet resultSet = connection.getMetaData().getCatalogs()) {
             while (resultSet.next()) {
-                String nameOfDataBases = resultSet.getString(DATABASE_NAME_COLUMN);
-                if (nameOfDataBases.equals(dataBaseName)) {
+                if (resultSet.getString(DATABASE_NAME_COLUMN).equals(dataBaseName)) {
                     return true;
                 }
             }
@@ -55,12 +57,12 @@ public class Connect {
         if (dataBaseAndTableNames.length != DATABASE_PARAMS) {
             throw new WrongArgumentException(INCORRECT_WRITER_NAME, dataSource);
         }
-        String nameOfDataBase = dataBaseAndTableNames[DATABASE_NAME_PARAM];
-        String nameOfTable = dataBaseAndTableNames[TABLE_NAME_PARAM];
+        String dataBaseName = dataBaseAndTableNames[DATABASE_NAME_PARAM];
+        String tableName = dataBaseAndTableNames[TABLE_NAME_PARAM];
         String login = PropertiesUtilClass.getIfPropertyExists(configurationFileName,
                 NAME_OF_LOGIN_PROPERTY_INTO_CONFIG_FILE);
         String password = PropertiesUtilClass.getIfPropertyExists(configurationFileName,
                 NAME_OF_PASSWORD_PROPERTY_INTO_CONFIG_FILE);
-        return new String[]{nameOfDataBase, nameOfTable, login, password};
+        return new String[]{dataBaseName, tableName, login, password};
     }
 }

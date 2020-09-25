@@ -16,14 +16,14 @@ import static constants.TrialsConstants.EXTRA_TRIAL;
 
 public class JsonTrialWriter implements TrialConsumer {
 
+    private static final Map<String, TrialJSONSerializer> TRIAL_JSON_SERIALIZERS_MAP = new HashMap<>();
     private JsonWriter writer;
-    private static final Map<String, TrialJSONSerializer> trialJSONSerializersMap = new HashMap<>();
 
     static {
-        trialJSONSerializersMap.put(TRIAL, new TrialJSONSerializer());
-        trialJSONSerializersMap.put(LIGHT_TRIAL, new TrialJSONSerializer());
-        trialJSONSerializersMap.put(STRONG_TRIAL, new TrialJSONSerializer());
-        trialJSONSerializersMap.put(EXTRA_TRIAL, new ExtraTrialJSONSerializer());
+        TRIAL_JSON_SERIALIZERS_MAP.put(TRIAL, new TrialJSONSerializer());
+        TRIAL_JSON_SERIALIZERS_MAP.put(LIGHT_TRIAL, new TrialJSONSerializer());
+        TRIAL_JSON_SERIALIZERS_MAP.put(STRONG_TRIAL, new TrialJSONSerializer());
+        TRIAL_JSON_SERIALIZERS_MAP.put(EXTRA_TRIAL, new ExtraTrialJSONSerializer());
     }
 
     public JsonTrialWriter() {
@@ -32,7 +32,7 @@ public class JsonTrialWriter implements TrialConsumer {
     @Override
     public void writeTrial(Trial trial) {
         String trialKind = WriterUtilClass.getTrialKind(trial);
-        trialJSONSerializersMap.get(trialKind).serialize(trial, writer);
+        TRIAL_JSON_SERIALIZERS_MAP.get(trialKind).serialize(trial, writer);
     }
 
     @Override
