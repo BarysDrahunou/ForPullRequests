@@ -1,6 +1,6 @@
 package constants;
 
-public class ReaderWriterConstants {
+public final class ReaderWriterConstants {
 
     public static final String DEFAULT_PATH_TO_PROPERTIES = "src/main/resources/configuration.properties";
     public static final String READER_NAME_IN_PROPERTIES = "reader";

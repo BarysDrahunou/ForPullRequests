@@ -8,7 +8,10 @@ import java.io.File;
 import static constants.ExceptionsMessages.*;
 import static constants.ReaderWriterConstants.*;
 
-public class WriterUtilClass {
+public final class WriterUtilClass {
+
+    private WriterUtilClass() {
+    }
 
     static void isWriterAlreadyExists(String writer) {
         File tempFile = new File(OUTPUT_PATH + writer);

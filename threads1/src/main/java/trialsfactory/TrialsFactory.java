@@ -14,13 +14,13 @@ import static constants.TrialsConstants.*;
 public class TrialsFactory {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Map<String, TrialValidator> trialValidatorsMap = new HashMap<>();
+    private static final Map<String, TrialValidator> TRIAL_VALIDATORS_MAP = new HashMap<>();
 
     static {
-        trialValidatorsMap.put(TRIAL, new TrialValidator(new Trial()));
-        trialValidatorsMap.put(LIGHT_TRIAL, new TrialValidator(new LightTrial()));
-        trialValidatorsMap.put(STRONG_TRIAL, new TrialValidator(new StrongTrial()));
-        trialValidatorsMap.put(EXTRA_TRIAL, new ExtraTrialValidator(new ExtraTrial()));
+        TRIAL_VALIDATORS_MAP.put(TRIAL, new TrialValidator(new Trial()));
+        TRIAL_VALIDATORS_MAP.put(LIGHT_TRIAL, new TrialValidator(new LightTrial()));
+        TRIAL_VALIDATORS_MAP.put(STRONG_TRIAL, new TrialValidator(new StrongTrial()));
+        TRIAL_VALIDATORS_MAP.put(EXTRA_TRIAL, new ExtraTrialValidator(new ExtraTrial()));
     }
 
     public static Optional<Trial> getTrial(String className, String account
@@ -38,7 +38,7 @@ public class TrialsFactory {
     }
 
     private static TrialValidator getTrialValidator(String trialKind) {
-        return trialValidatorsMap.computeIfAbsent(trialKind, key -> {
+        return TRIAL_VALIDATORS_MAP.computeIfAbsent(trialKind, key -> {
             throw new WrongArgumentException(CLASS_DOES_NOT_EXIST, trialKind);
         });
     }

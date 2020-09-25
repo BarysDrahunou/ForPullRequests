@@ -1,6 +1,6 @@
 package constants;
 
-public class ExceptionsMessages {
+public final class ExceptionsMessages {
 
     public static final String STRING_FORMAT_FOR_EXCEPTIONS = "%s - %s";
     public static final String FILE_DOES_NOT_EXIST = "File with this name doesn't exist: ";
